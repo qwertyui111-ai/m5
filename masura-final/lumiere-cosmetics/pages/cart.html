@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Корзина — Masura</title>
+
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/base.css">
+  <link rel="stylesheet" href="../css/nav.css">
+  <link rel="stylesheet" href="../css/cart.css">
+  <link rel="stylesheet" href="../css/catalog.css">
+</head>
+<body>
+
+  <header id="site-nav" class="nav" role="banner"></header>
+
+  <main>
+    <div class="container">
+
+      <div class="page-header" style="text-align:left; padding-bottom: var(--spacing-lg)">
+        <p class="page-header__eyebrow">Ваш выбор</p>
+        <h1 class="page-header__title" style="font-size: clamp(32px, 5vw, 52px)">Корзина</h1>
+      </div>
+
+      <!-- Cart content (empty or items+summary) -->
+      <div id="cart-content" aria-live="polite">
+        <!-- Rendered by cart-page.js -->
+      </div>
+
+    </div>
+  </main>
+
+  <footer role="contentinfo" style="margin-top: auto">
+    <div class="container">
+      <div class="footer__bottom" style="border:none; padding:var(--spacing-xl) 0">
+        <span style="color:rgba(255,255,255,0.5)">© 2025 Masura</span>
+        <a href="../index.html" style="color:var(--color-sand); font-size:12px">На главную</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../js/products.js"></script>
+  <script src="../js/cart.js"></script>
+  <script src="../js/nav.js"></script>
+  <script src="../js/cart-page.js"></script>
+
+
+<!-- Секретная кнопка админки -->
+<button id="secret-heart" aria-hidden="true" style="position:fixed;bottom:80px;right:20px;width:44px;height:44px;border-radius:50%;border:none;background:transparent;font-size:24px;cursor:pointer;z-index:9999;-webkit-tap-highlight-color:transparent;opacity:0.6">🩷</button>
+<script>
+(function(){
+  var btn = document.getElementById('secret-heart');
+  var count = 0, timer;
+  var inPages = window.location.pathname.includes('/pages/');
+  var root = inPages ? '../' : './';
+  function tap(e) {
+    e.preventDefault();
+    count++;
+    btn.style.transform = 'scale(1.4)';
+    setTimeout(function(){ btn.style.transform = 'scale(1)'; }, 150);
+    clearTimeout(timer);
+    timer = setTimeout(function(){ count = 0; }, 3000);
+    if (count >= 3) {
+      count = 0;
+      window.location.href = root + 'pages/admin.html';
+    }
+  }
+  btn.addEventListener('touchend', tap);
+  btn.addEventListener('click', tap);
+})();
+</script>
+</body>
+</html>

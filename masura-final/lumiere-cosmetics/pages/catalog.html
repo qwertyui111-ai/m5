@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Каталог — Masura</title>
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/base.css">
+  <link rel="stylesheet" href="../css/nav.css">
+  <link rel="stylesheet" href="../css/catalog.css">
+</head>
+<body>
+
+  <header id="site-nav" class="nav" role="banner"></header>
+
+  <main>
+    <div class="container">
+      <div class="page-header">
+        <p class="page-header__eyebrow">Наш ассортимент</p>
+        <h1 class="page-header__title">Каталог</h1>
+        <p class="page-header__subtitle">Откройте для себя косметику, созданную для настоящих ритуалов красоты</p>
+      </div>
+
+      <!-- Search bar -->
+      <div style="margin-bottom:16px">
+        <input
+          type="search"
+          id="catalog-search"
+          placeholder="Поиск по названию, цвету, эффекту..."
+          style="width:100%;padding:12px 18px;border:1.5px solid var(--color-border);border-radius:var(--radius-pill);font-family:var(--font-body);font-size:14px;background:var(--color-white);color:var(--color-espresso);outline:none;transition:border-color 0.2s"
+          oninput="filterProducts()"
+        >
+      </div>
+
+      <div class="catalog-filters" id="catalog-filters" role="group" aria-label="Фильтр по категории">
+        <div class="loading" style="padding:8px 0"><div class="spinner" style="width:16px;height:16px;border-width:1.5px"></div></div>
+      </div>
+
+      <div class="product-grid" id="product-grid" aria-label="Товары">
+        <div class="loading" style="grid-column:1/-1"><div class="spinner"></div> Загрузка товаров...</div>
+      </div>
+    </div>
+  </main>
+
+  <footer role="contentinfo">
+    <div class="container">
+      <div class="footer__bottom" style="border:none;padding:var(--spacing-xl) 0">
+        <span style="color:rgba(255,255,255,0.5)">© 2025 Masura</span>
+        <a href="../index.html" style="color:var(--color-sand);font-size:12px">На главную</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../js/nav.js"></script>
+  <script src="../js/cart.js"></script>
+
+  <script type="module">
+    import { getActiveProducts, getCategories } from '../js/db.js';
+
+    // ---- Nav ----
+    function initNav() {
+      if (typeof window.renderNav === 'function') {
+        window.renderNav('catalog');
+      }
+    }
+
+    // ---- Load data ----
+    async function init() {
+      initNav();
+      const [products, categories] = await Promise.all([getActiveProducts(), getCategories()]);
+
+      renderFilters(categories);
+      renderProducts(products, categories, 'all');
+    }
+
+    function renderFilters(categories) {
+      const container = document.getElementById('catalog-filters');
+      const all = [{ id: 'all', label: 'Все' }, ...categories];
+      container.innerHTML = all.map(c =>
+        `<button class="filter-btn ${c.id === 'all' ? 'active' : ''}" data-category="${c.id}">${c.label}</button>`
+      ).join('');
+
+      container.addEventListener('click', e => {
+        const btn = e.target.closest('.filter-btn');
+        if (!btn) return;
+        container.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const filtered = btn.dataset.category === 'all'
+          ? window._allProducts
+          : window._allProducts.filter(p => p.category === btn.dataset.category);
+        renderProducts(filtered, window._allCategories, btn.dataset.category);
+      });
+    }
+
+    window.filterProducts = function() {
+      const q = document.getElementById('catalog-search')?.value.toLowerCase().trim() || '';
+      const activeBtn = document.querySelector('.filter-btn.active');
+      const activeCategory = activeBtn?.dataset.category || 'all';
+
+      let filtered = window._allProducts || [];
+
+      // Filter by category
+      if (activeCategory !== 'all') {
+        filtered = filtered.filter(p => p.category === activeCategory);
+      }
+
+      // Filter by search query — name, color, effect, productType
+      if (q) {
+        filtered = filtered.filter(p => {
+          const fields = [
+            p.name, p.description, p.color,
+            p.effect, p.productType
+          ].map(v => (v || '').toLowerCase());
+          return fields.some(f => f.includes(q));
+        });
+      }
+
+      renderProducts(filtered, window._allCategories, activeCategory, true);
+    };
+
+    function renderProducts(products, categories, activeCategory, skipStore) {
+      if (!skipStore) {
+        window._allProducts   = products;
+        window._allCategories = categories;
+      }
+      const grid = document.getElementById('product-grid');
+
+      if (products.length === 0) {
+        grid.innerHTML = `<p class="catalog-empty">Товары не найдены</p>`;
+        return;
+      }
+
+      const getCatLabel = id => categories.find(c => c.id === id)?.label || id;
+
+      grid.innerHTML = products.map(p => `
+        <article class="product-card animate-fade-up">
+          ${p.badge ? `<span class="product-card__badge ${p.badge === 'New' ? 'product-card__badge--new' : ''}">${p.badge}</span>` : ''}
+          <div class="product-card__image-wrap">
+            ${p.image
+              ? `<img class="product-card__image" src="${p.image}" alt="${p.name}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
+              : ''
+            }
+            <div class="product-card__image-placeholder" aria-hidden="true" style="${p.image ? 'display:none' : ''}">${p.emoji || '✦'}</div>
+          </div>
+          <div class="product-card__info">
+            <p class="product-card__category">${getCatLabel(p.category)}</p>
+            <h3 class="product-card__name">${p.name}</h3>
+            <p class="product-card__desc">${p.description || ''}</p>
+            <div class="product-card__footer">
+              <div class="product-card__price">${Number(p.price).toLocaleString('ru-RU')} ₽</div>
+              <button class="product-card__add-btn" data-id="${p.id}" aria-label="Добавить ${p.name} в корзину">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              </button>
+            </div>
+          </div>
+        </article>
+      `).join('');
+
+      grid.querySelectorAll('.product-card__add-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (typeof Cart !== 'undefined') Cart.add(btn.dataset.id);
+          else showToast('Добавлено в корзину');
+        });
+      });
+    }
+
+    init();
+  </script>
+
+<!-- Секретная кнопка админки -->
+<button id="secret-heart" aria-hidden="true" style="position:fixed;bottom:80px;right:20px;width:44px;height:44px;border-radius:50%;border:none;background:transparent;font-size:24px;cursor:pointer;z-index:9999;-webkit-tap-highlight-color:transparent;opacity:0.6">🩷</button>
+<script>
+(function(){
+  var btn = document.getElementById('secret-heart');
+  var count = 0, timer;
+  var inPages = window.location.pathname.includes('/pages/');
+  var root = inPages ? '../' : './';
+  function tap(e) {
+    e.preventDefault();
+    count++;
+    btn.style.transform = 'scale(1.4)';
+    setTimeout(function(){ btn.style.transform = 'scale(1)'; }, 150);
+    clearTimeout(timer);
+    timer = setTimeout(function(){ count = 0; }, 3000);
+    if (count >= 3) {
+      count = 0;
+      window.location.href = root + 'pages/admin.html';
+    }
+  }
+  btn.addEventListener('touchend', tap);
+  btn.addEventListener('click', tap);
+})();
+</script>
+</body>
+</html>

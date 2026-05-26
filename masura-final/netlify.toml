@@ -1,0 +1,8 @@
+[build]
+  publish = "lumiere-cosmetics"
+  functions = "netlify/functions"
+
+[[headers]]
+  for = "/.netlify/functions/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "https://extraordinary-pixie-54ce55.netlify.app"

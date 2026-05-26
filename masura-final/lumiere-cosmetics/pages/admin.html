@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Админ-панель — Masura</title>
+  <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body>
+
+<!-- Мобильный оверлей -->
+<div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+<!-- Мобильный хедер -->
+<div class="mobile-header" id="mobile-header">
+  <span class="mobile-header__logo">Masura</span>
+  <button class="mobile-header__menu-btn" id="mobile-menu-btn" aria-label="Меню">
+    <span></span><span></span><span></span>
+  </button>
+</div>
+
+<div class="login-screen" id="login-screen">
+  <div class="login-box">
+    <p class="login-logo">Masura</p>
+    <p class="login-subtitle">Панель управления</p>
+    <label for="login-email">Email</label>
+    <input type="email" id="login-email" placeholder="admin@masura.ru" autocomplete="email">
+    <label for="login-password">Пароль</label>
+    <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password">
+    <button class="login-btn" id="login-btn">Войти</button>
+    <p class="login-error" id="login-error"></p>
+  </div>
+</div>
+
+<div class="admin-layout" id="admin-app" style="display:none">
+  <aside class="sidebar">
+    <p class="sidebar__logo">Masura</p>
+    <p class="sidebar__label" id="sidebar-user-label">Admin</p>
+    <nav class="sidebar__nav">
+      <div class="sidebar__item active" data-section="dashboard">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Дашборд
+      </div>
+      <div class="sidebar__item" data-section="products">
+        <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+        Товары
+      </div>
+      <div class="sidebar__item" data-section="categories">
+        <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h7"/></svg>
+        Категории
+      </div>
+      <div class="sidebar__item" data-section="orders">
+        <svg viewBox="0 0 24 24"><path d="M9 17H5a2 2 0 00-2 2"/><path d="M21 17h-4a2 2 0 00-2 2"/><line x1="12" y1="3" x2="12" y2="13"/><path d="M8 7l4-4 4 4"/></svg>
+        Заказы
+      </div>
+      <div class="sidebar__item" data-section="settings">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+        Настройки сайта
+      </div>
+    </nav>
+    <div class="sidebar__bottom">
+      <span id="admin-email-display">—</span>
+      <button class="sidebar__logout" id="logout-btn">Выйти</button>
+    </div>
+  </aside>
+
+  <main class="admin-main">
+
+    <!-- DASHBOARD -->
+    <section class="admin-section active" id="section-dashboard">
+      <h1 class="admin-page-title">Дашборд</h1>
+      <p class="admin-page-sub">Добро пожаловать в панель управления Masura</p>
+      <div class="stats-grid">
+        <div class="stat-card"><p class="stat-card__label">Товаров</p><p class="stat-card__value" id="stat-products">—</p></div>
+        <div class="stat-card"><p class="stat-card__label">Категорий</p><p class="stat-card__value" id="stat-categories">—</p></div>
+        <div class="stat-card"><p class="stat-card__label">Заказов</p><p class="stat-card__value" id="stat-orders">—</p></div>
+        <div class="stat-card"><p class="stat-card__label">Новых заказов</p><p class="stat-card__value accent" id="stat-new-orders">—</p></div>
+      </div>
+      <div class="data-table-wrap">
+        <table class="data-table">
+          <thead><tr><th>Заказ</th><th>Покупатель</th><th>Сумма</th><th>Статус</th><th>Дата</th></tr></thead>
+          <tbody id="recent-orders-body"><tr><td colspan="5"><div class="loading"><div class="spinner"></div> Загрузка...</div></td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- PRODUCTS -->
+    <section class="admin-section" id="section-products">
+      <h1 class="admin-page-title">Товары</h1>
+      <p class="admin-page-sub">Управление каталогом</p>
+      <div class="toolbar">
+        <div class="toolbar__left">
+          <input type="search" class="search-input" id="product-search" placeholder="Поиск товара...">
+        </div>
+        <button class="btn btn-primary" id="add-product-btn">
+          <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Добавить товар
+        </button>
+      </div>
+      <div class="data-table-wrap">
+        <table class="data-table">
+          <thead><tr><th>Товар</th><th>Категория</th><th>Цена</th><th>Метка</th><th>Статус</th><th>Действия</th></tr></thead>
+          <tbody id="products-table-body"><tr><td colspan="6"><div class="loading"><div class="spinner"></div> Загрузка...</div></td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- CATEGORIES -->
+    <section class="admin-section" id="section-categories">
+      <h1 class="admin-page-title">Категории</h1>
+      <p class="admin-page-sub">Управление разделами каталога</p>
+      <div class="toolbar">
+        <div></div>
+        <button class="btn btn-primary" id="add-category-btn">
+          <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Добавить категорию
+        </button>
+      </div>
+      <div class="data-table-wrap">
+        <table class="data-table">
+          <thead><tr><th>Название</th><th>ID</th><th>Порядок</th><th>Действия</th></tr></thead>
+          <tbody id="categories-table-body"><tr><td colspan="4"><div class="loading"><div class="spinner"></div></div></td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ORDERS -->
+    <section class="admin-section" id="section-orders">
+      <h1 class="admin-page-title">Заказы</h1>
+      <p class="admin-page-sub">Все поступившие заказы</p>
+      <div class="data-table-wrap">
+        <table class="data-table">
+          <thead><tr><th>№</th><th>Покупатель</th><th>Товары</th><th>Сумма</th><th>Статус</th><th>Дата</th><th>Действия</th></tr></thead>
+          <tbody id="orders-table-body"><tr><td colspan="7"><div class="loading"><div class="spinner"></div> Загрузка...</div></td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SETTINGS -->
+    <section class="admin-section" id="section-settings">
+      <h1 class="admin-page-title">Настройки сайта</h1>
+      <p class="admin-page-sub">Тексты и содержимое главной страницы</p>
+      <div class="settings-card">
+        <h2 class="settings-card__title">Баннер (Hero)</h2>
+        <div class="form-group"><label>Надпись над заголовком</label><input type="text" id="s-eyebrow" placeholder="Новая коллекция 2025"></div>
+        <div class="form-group"><label>URL фото справа</label><input type="text" id="s-image" placeholder="https://cdn1.ozone.ru/...jpg"></div>
+        <div class="form-group"><label>Главный заголовок</label><input type="text" id="s-title" placeholder="Красота — это ритуал"></div>
+        <div class="form-group"><label>Подзаголовок</label><textarea id="s-subtitle" rows="2"></textarea></div>
+        <div class="form-row">
+          <div class="form-group"><label>Текст кнопки CTA</label><input type="text" id="s-cta"></div>
+          <div class="form-group"><label>Тег бестселлера</label><input type="text" id="s-tag"></div>
+        </div>
+      </div>
+      <div class="settings-card">
+        <h2 class="settings-card__title">Бегущая строка</h2>
+        <div class="form-group"><label>Элементы (через запятую)</label><input type="text" id="s-marquee"></div>
+      </div>
+      <div style="display:flex;justify-content:flex-end">
+        <button class="btn btn-primary" id="save-settings-btn">Сохранить изменения</button>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- MODAL: Product -->
+<div class="modal-overlay" id="product-modal">
+  <div class="modal">
+    <div class="modal__header">
+      <h2 class="modal__title" id="product-modal-title">Новый товар</h2>
+      <button class="modal__close" data-close="product-modal">×</button>
+    </div>
+    <div class="modal__body">
+      <input type="hidden" id="pm-id">
+      <div class="form-row">
+        <div class="form-group"><label>Название *</label><input type="text" id="pm-name" placeholder="Masura лак"></div>
+        <div class="form-group"><label>Категория *</label><select id="pm-category"></select></div>
+      </div>
+      <div class="form-group"><label>Описание</label><textarea id="pm-description" rows="2"></textarea></div>
+      <div class="form-row">
+        <div class="form-group"><label>Цена (₽) *</label><input type="number" id="pm-price" placeholder="2500" min="0"></div>
+        <div class="form-group"><label>Метка</label>
+          <select id="pm-badge">
+            <option value="">Нет</option>
+            <option value="New">New</option>
+            <option value="Хит">Хит</option>
+            <option value="Акция">Акция</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group"><label>Иконка-эмодзи</label><input type="text" id="pm-emoji" placeholder="✦" maxlength="2"></div>
+
+      <!-- Характеристики -->
+      <div class="tags-section">
+        <div class="tags-section__header">
+          <p class="tags-section__title">Характеристики для поиска</p>
+          <button class="btn btn-outline btn-sm" id="pm-ai-tags-btn" type="button">✦ Предложить ИИ</button>
+        </div>
+        <p id="pm-ai-status" class="tags-section__status"></p>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Цвет</label>
+            <input type="text" id="pm-color" placeholder="красный, розовый, бежевый">
+          </div>
+          <div class="form-group">
+            <label>Эффект</label>
+            <input type="text" id="pm-effect" placeholder="слюда, глиттер, шиммер, матовый">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Тип товара</label>
+          <input type="text" id="pm-type" placeholder="лак, гель-лак, топ, база, пудра">
+        </div>
+      </div>
+
+      <div class="toggle-row">
+        <label for="pm-active">Показывать в каталоге</label>
+        <label class="toggle"><input type="checkbox" id="pm-active" checked><span class="toggle__slider"></span></label>
+      </div>
+    </div>
+    <div class="modal__footer">
+      <button class="btn btn-outline" data-close="product-modal">Отмена</button>
+      <button class="btn btn-primary" id="save-product-btn">Сохранить</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Category -->
+<div class="modal-overlay" id="category-modal">
+  <div class="modal">
+    <div class="modal__header">
+      <h2 class="modal__title" id="category-modal-title">Новая категория</h2>
+      <button class="modal__close" data-close="category-modal">×</button>
+    </div>
+    <div class="modal__body">
+      <input type="hidden" id="cm-id">
+      <div class="form-group"><label>Название *</label><input type="text" id="cm-label" placeholder="Уход за кожей"></div>
+      <div class="form-row">
+        <div class="form-group"><label>ID (латиница) *</label><input type="text" id="cm-slug" placeholder="skincare"></div>
+        <div class="form-group"><label>Порядок в меню</label><input type="number" id="cm-order" value="10" min="1"></div>
+      </div>
+    </div>
+    <div class="modal__footer">
+      <button class="btn btn-outline" data-close="category-modal">Отмена</button>
+      <button class="btn btn-primary" id="save-category-btn">Сохранить</button>
+    </div>
+  </div>
+</div>
+
+<script type="module" src="../js/admin.js"></script>
+</body>
+</html>
