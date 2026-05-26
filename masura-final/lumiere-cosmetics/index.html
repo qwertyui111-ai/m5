@@ -55,7 +55,7 @@
   <script src="js/cart.js"></script>
 
   <script type="module">
-    import { getActiveProducts, getCategories } from 'js/db.js';
+    import { getActiveProducts, getCategories } from './js/db.js';
 
     // ---- Nav ----
     function initNav() {
@@ -168,28 +168,7 @@
   </script>
 
 <!-- Секретная кнопка админки -->
-<button id="secret-heart" aria-hidden="true" style="position:fixed;bottom:80px;right:20px;width:44px;height:44px;border-radius:50%;border:none;background:transparent;font-size:24px;cursor:pointer;z-index:9999;-webkit-tap-highlight-color:transparent;opacity:0.6">🩷</button>
-<script>
-(function(){
-  var btn = document.getElementById('secret-heart');
-  var count = 0, timer;
-  var inPages = window.location.pathname.includes('/pages/');
-  var root = inPages ? '../' : './';
-  function tap(e) {
-    e.preventDefault();
-    count++;
-    btn.style.transform = 'scale(1.4)';
-    setTimeout(function(){ btn.style.transform = 'scale(1)'; }, 150);
-    clearTimeout(timer);
-    timer = setTimeout(function(){ count = 0; }, 3000);
-    if (count >= 3) {
-      count = 0;
-      window.location.href = root + 'pages/admin.html';
-    }
-  }
-  btn.addEventListener('touchend', tap);
-  btn.addEventListener('click', tap);
-})();
-</script>
+
+
 </body>
 </html>
