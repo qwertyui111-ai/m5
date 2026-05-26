@@ -5,4 +5,4 @@
 [[headers]]
   for = "/.netlify/functions/*"
   [headers.values]
-    Access-Control-Allow-Origin = "https://extraordinary-pixie-54ce55.netlify.app"
+    Access-Control-Allow-Origin = "https://admirable-ganache-f75333.netlify.app"
