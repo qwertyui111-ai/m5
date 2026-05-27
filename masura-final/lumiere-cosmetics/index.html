@@ -85,9 +85,13 @@
         if (!btn) return;
         container.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        const filtered = btn.dataset.category === 'all'
-          ? window._allProducts
-          : window._allProducts.filter(p => p.category === btn.dataset.category);
+        const cat = btn.dataset.category;
+          const filtered = cat === 'all'
+            ? window._allProducts
+            : window._allProducts.filter(p => {
+                if (Array.isArray(p.categories)) return p.categories.includes(cat);
+                return p.category === cat;
+              });
         renderProducts(filtered, window._allCategories, btn.dataset.category);
       });
     }
