@@ -198,7 +198,7 @@ document.getElementById('add-product-btn').addEventListener('click', () => {
   document.getElementById('pm-effect').value       = '';
   document.getElementById('pm-type').value         = '';
   document.getElementById('pm-ai-status').textContent = '';
-  populateCategorySelect('pm-category', '');
+  populateCategoryCheckboxes([]);
   bindAiTagsBtn();
   openModal('product-modal');
 });
@@ -217,7 +217,7 @@ window.openEditProduct = async (id) => {
   document.getElementById('pm-color').value        = p.color  || '';
   document.getElementById('pm-effect').value       = p.effect || '';
   document.getElementById('pm-type').value         = p.productType || '';
-  populateCategorySelect('pm-category', p.category);
+  populateCategoryCheckboxes(Array.isArray(p.categories) ? p.categories : (p.category ? [p.category] : []));
   bindAiTagsBtn();
   openModal('product-modal');
 };
@@ -238,7 +238,8 @@ document.getElementById('save-product-btn').addEventListener('click', async () =
 
   const data = {
     name,
-    category:    document.getElementById('pm-category').value,
+    categories:  getSelectedCategories(),
+    category:    getSelectedCategories()[0] || 'all',
     description: document.getElementById('pm-description').value.trim(),
     price,
     emoji:       document.getElementById('pm-emoji').value || '✦',
@@ -494,10 +495,26 @@ function bindAiTagsBtn() {
 }
 
 function populateCategorySelect(selectId, currentValue) {
-  const sel = document.getElementById(selectId);
-  sel.innerHTML = allCategories.map(c =>
-    `<option value="${c.id}" ${c.id === currentValue ? 'selected' : ''}>${c.label}</option>`
-  ).join('');
+  // Legacy support - now uses checkboxes
+  populateCategoryCheckboxes(currentValue ? [currentValue] : []);
+}
+
+function populateCategoryCheckboxes(currentValues = []) {
+  const container = document.getElementById('pm-categories');
+  if (!container) return;
+  const vals = Array.isArray(currentValues) ? currentValues : [currentValues].filter(Boolean);
+  container.innerHTML = allCategories.map(c => `
+    <label style="display:flex;align-items:center;gap:6px;padding:4px 10px;border-radius:20px;border:1px solid #E5D5C5;cursor:pointer;font-size:12px;background:${vals.includes(c.id) ? '#2C1A0E' : '#fff'};color:${vals.includes(c.id) ? '#fff' : '#2C1A0E'};transition:all 0.15s">
+      <input type="checkbox" value="${c.id}" ${vals.includes(c.id) ? 'checked' : ''} style="display:none" onchange="this.closest('label').style.background=this.checked?'#2C1A0E':'#fff';this.closest('label').style.color=this.checked?'#fff':'#2C1A0E'">
+      ${c.label}
+    </label>
+  `).join('');
+}
+
+function getSelectedCategories() {
+  const container = document.getElementById('pm-categories');
+  if (!container) return [];
+  return [...container.querySelectorAll('input[type=checkbox]:checked')].map(cb => cb.value);
 }
 
 function getCatLabel(id) {
