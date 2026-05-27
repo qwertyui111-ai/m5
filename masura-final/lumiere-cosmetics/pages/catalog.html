@@ -85,9 +85,13 @@
         if (!btn) return;
         container.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        const filtered = btn.dataset.category === 'all'
-          ? window._allProducts
-          : window._allProducts.filter(p => p.category === btn.dataset.category);
+        const cat = btn.dataset.category;
+          const filtered = cat === 'all'
+            ? window._allProducts
+            : window._allProducts.filter(p => {
+                if (Array.isArray(p.categories)) return p.categories.includes(cat);
+                return p.category === cat;
+              });
         renderProducts(filtered, window._allCategories, btn.dataset.category);
       });
     }
@@ -168,28 +172,7 @@
   </script>
 
 <!-- Секретная кнопка админки -->
-<button id="secret-heart" aria-hidden="true" style="position:fixed;bottom:80px;right:20px;width:44px;height:44px;border-radius:50%;border:none;background:transparent;font-size:24px;cursor:pointer;z-index:9999;-webkit-tap-highlight-color:transparent;opacity:0.6">🩷</button>
-<script>
-(function(){
-  var btn = document.getElementById('secret-heart');
-  var count = 0, timer;
-  var inPages = window.location.pathname.includes('/pages/');
-  var root = inPages ? '../' : './';
-  function tap(e) {
-    e.preventDefault();
-    count++;
-    btn.style.transform = 'scale(1.4)';
-    setTimeout(function(){ btn.style.transform = 'scale(1)'; }, 150);
-    clearTimeout(timer);
-    timer = setTimeout(function(){ count = 0; }, 3000);
-    if (count >= 3) {
-      count = 0;
-      window.location.href = root + 'pages/admin.html';
-    }
-  }
-  btn.addEventListener('touchend', tap);
-  btn.addEventListener('click', tap);
-})();
-</script>
+
+
 </body>
 </html>
