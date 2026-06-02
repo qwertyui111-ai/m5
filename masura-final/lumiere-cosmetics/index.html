@@ -703,6 +703,13 @@ Instagram: @masura</p>
     // Modal
     var currentProduct = null;
 
+    function switchModalImage(el) {
+      var src = el.dataset.src;
+      var img = document.getElementById('modal-img');
+      var ph = document.getElementById('modal-ph');
+      img.src = src; img.style.display = 'block'; ph.style.display = 'none';
+    }
+
     function closeModal() {
       document.getElementById('product-modal').classList.remove('open');
     }
@@ -736,7 +743,7 @@ Instagram: @masura</p>
         if (allPhotos.length > 1) {
           galleryEl.style.display = 'grid';
           galleryEl.innerHTML = allPhotos.map(function(url) {
-            return '<img src="' + url + '" onclick="document.getElementById('modal-img').src=this.src;document.getElementById('modal-img').style.display='block';document.getElementById('modal-ph').style.display='none'" style="width:100%;aspect-ratio:1;object-fit:contain;cursor:pointer;border:1px solid #e8e8e8;padding:4px;background:#fff">';
+            return '<div onclick="switchModalImage(this)" data-src="' + url + '" style="cursor:pointer;aspect-ratio:1;border:1px solid #e8e8e8;background:#fff"><img src="' + url + '" style="width:100%;height:100%;object-fit:contain;padding:4px"></div>';
           }).join('');
         } else {
           galleryEl.style.display = 'none';
