@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Корзина — Masura</title>
-
   <link rel="stylesheet" href="../css/variables.css">
   <link rel="stylesheet" href="../css/base.css">
   <link rel="stylesheet" href="../css/nav.css">
@@ -17,37 +16,17 @@
 
   <main>
     <div class="container">
-
-      <div class="page-header" style="text-align:left; padding-bottom: var(--spacing-lg)">
+      <div class="page-header">
         <p class="page-header__eyebrow">Ваш выбор</p>
-        <h1 class="page-header__title" style="font-size: clamp(32px, 5vw, 52px)">Корзина</h1>
+        <h1 class="page-header__title">Корзина</h1>
       </div>
-
-      <!-- Cart content (empty or items+summary) -->
-      <div id="cart-content" aria-live="polite">
-        <!-- Rendered by cart-page.js -->
-      </div>
-
+      <div id="cart-content"></div>
     </div>
   </main>
 
-  <footer role="contentinfo" style="margin-top: auto">
-    <div class="container">
-      <div class="footer__bottom" style="border:none; padding:var(--spacing-xl) 0">
-        <span style="color:rgba(255,255,255,0.5)">© 2025 Masura</span>
-        <a href="../index.html" style="color:var(--color-sand); font-size:12px">На главную</a>
-      </div>
-    </div>
-  </footer>
-
-  <script src="../js/products.js"></script>
-  <script src="../js/cart.js"></script>
   <script src="../js/nav.js"></script>
+  <script src="../js/cart.js"></script>
   <script src="../js/cart-page.js"></script>
 
-
-<!-- Секретная кнопка админки -->
-
-</script>
 </body>
 </html>
