@@ -153,7 +153,7 @@ function renderProductsTable(products) {
     <tr data-id="${p.id}">
       <td>
         <div style="display:flex;align-items:center;gap:8px">
-          ${p.favorite ? '<span title="Избранное" style="font-size:14px">⭐</span>' : ''}
+          ${p.favorite ? '<span title="Избранное" style="font-size:14px;filter:grayscale(1) brightness(0.2) sepia(1) hue-rotate(10deg)">⭐</span>' : ''}
           <span style="font-weight:400">${p.name}</span>
         </div>
       </td>
