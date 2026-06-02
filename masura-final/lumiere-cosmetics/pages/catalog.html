@@ -227,34 +227,37 @@
   }
   </script>
 
+  
+
+
   <script>
   window.showProductModal = function(p) {
-    document.getElementById('modal-product-name').textContent = p.name;
+    var modal = document.getElementById('product-modal-view');
+    if (!modal) return;
+    document.getElementById('modal-product-name').textContent = p.name || '';
     document.getElementById('modal-product-desc').textContent = p.description || 'Описание отсутствует';
     document.getElementById('modal-product-price').textContent = Number(p.price).toLocaleString('ru-RU') + ' ₽';
-
-    const img = document.getElementById('modal-product-image');
-    const placeholder = document.getElementById('modal-product-placeholder');
+    var img = document.getElementById('modal-product-image');
+    var ph  = document.getElementById('modal-product-placeholder');
     if (p.image) {
-      img.src = p.image; img.style.display = 'block';
-      placeholder.style.display = 'none';
+      img.src = p.image; img.style.display = 'block'; ph.style.display = 'none';
     } else {
-      img.style.display = 'none';
-      placeholder.style.display = 'flex';
-      placeholder.textContent = p.emoji || '✦';
+      img.style.display = 'none'; ph.style.display = 'flex';
+      ph.textContent = p.emoji || '✦';
     }
-
-    const addBtn = document.getElementById('modal-add-btn');
-    addBtn.onclick = () => {
+    var addBtn = document.getElementById('modal-add-btn');
+    addBtn.onclick = function() {
       if (typeof Cart !== 'undefined') Cart.add(p);
       addBtn.textContent = '✓ Добавлено';
       addBtn.style.background = 'var(--color-accent, #D4847A)';
-      setTimeout(() => {
+      setTimeout(function() {
         addBtn.textContent = 'В корзину';
         addBtn.style.background = '#1A1A1A';
       }, 1500);
     };
+    modal.style.display = 'flex';
+    modal.onclick = function(e) { if (e.target === modal) modal.style.display = 'none'; };
+  };
   </script>
-
 </body>
 </html>
