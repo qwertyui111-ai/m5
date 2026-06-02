@@ -412,7 +412,11 @@ async function loadSettings() {
   const s = await getSettings();
   document.getElementById('s-logo-image').value      = s.logoImage      || '';
   document.getElementById('s-marquee').value          = (s.marqueeItems || []).join(', ');
+  document.getElementById('s-marquee-bg').value      = s.marqueeBg    || '#111111';
+  document.getElementById('s-marquee-color').value   = s.marqueeColor || '#ffffff';
+  document.getElementById('s-banner1-enabled').checked = s.heroBanner1Enabled !== false;
   document.getElementById('s-banner1').value          = s.heroBanner1   || '';
+  document.getElementById('s-banner2-enabled').checked = s.heroBanner2Enabled !== false;
   document.getElementById('s-banner2').value          = s.heroBanner2   || '';
   document.getElementById('s-footer-about').value     = s.footerAbout   || '';
   document.getElementById('s-footer-help').value      = s.footerHelp    || '';
@@ -425,7 +429,11 @@ document.getElementById('save-settings-btn').addEventListener('click', async () 
   await saveSettings({
     logoImage:    document.getElementById('s-logo-image').value.trim(),
     marqueeItems: marqueeRaw.split(',').map(s => s.trim()).filter(Boolean),
+    marqueeBg:    document.getElementById('s-marquee-bg').value,
+    marqueeColor: document.getElementById('s-marquee-color').value,
+    heroBanner1Enabled: document.getElementById('s-banner1-enabled').checked,
     heroBanner1:  document.getElementById('s-banner1').value.trim(),
+    heroBanner2Enabled: document.getElementById('s-banner2-enabled').checked,
     heroBanner2:  document.getElementById('s-banner2').value.trim(),
     footerAbout:  document.getElementById('s-footer-about').value.trim(),
     footerHelp:   document.getElementById('s-footer-help').value.trim(),
