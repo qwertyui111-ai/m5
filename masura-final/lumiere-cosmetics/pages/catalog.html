@@ -160,10 +160,33 @@
         </article>
       `).join('');
 
+      // Add to cart — pass full product data
       grid.querySelectorAll('.product-card__add-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          if (typeof Cart !== 'undefined') Cart.add(btn.dataset.id);
-          else showToast('Добавлено в корзину');
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const id = btn.dataset.id;
+          const product = (window._allProducts || []).find(p => p.id === id);
+          if (typeof Cart !== 'undefined' && product) {
+            Cart.add(product);
+            btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>';
+            btn.style.background = 'var(--color-accent)';
+            setTimeout(() => {
+              btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>';
+              btn.style.background = '';
+            }, 1500);
+          }
+        });
+      });
+
+      // Click on card — show description modal
+      grid.querySelectorAll('.product-card').forEach(card => {
+        card.style.cursor = 'pointer';
+        card.addEventListener('click', (e) => {
+          if (e.target.closest('.product-card__add-btn')) return;
+          const id = card.querySelector('.product-card__add-btn')?.dataset.id;
+          const product = (window._allProducts || []).find(p => p.id === id);
+          if (!product) return;
+          showProductModal(product);
         });
       });
     }
@@ -174,5 +197,58 @@
 <!-- Секретная кнопка админки -->
 
 
+
+  <!-- Product Modal -->
+  <div id="product-modal-view" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1000;align-items:center;justify-content:center;padding:16px">
+    <div style="background:#fff;border-radius:16px;max-width:480px;width:100%;max-height:90vh;overflow-y:auto">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:20px 24px 16px;border-bottom:1px solid #E8E2DC">
+        <h2 id="modal-product-name" style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:400"></h2>
+        <button onclick="document.getElementById('product-modal-view').style.display='none'" style="background:none;border:none;font-size:24px;cursor:pointer;color:#888;line-height:1">×</button>
+      </div>
+      <div style="padding:20px 24px">
+        <img id="modal-product-image" src="" alt="" style="width:100%;border-radius:12px;margin-bottom:16px;display:none">
+        <div id="modal-product-placeholder" style="width:100%;aspect-ratio:1;border-radius:12px;background:#F2EEE9;display:flex;align-items:center;justify-content:center;font-size:64px;margin-bottom:16px"></div>
+        <p id="modal-product-desc" style="font-size:14px;color:#666;line-height:1.7;margin-bottom:16px"></p>
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <span id="modal-product-price" style="font-family:'Cormorant Garamond',serif;font-size:28px"></span>
+          <button id="modal-add-btn" style="background:#1A1A1A;color:#fff;border:none;border-radius:99px;padding:12px 24px;font-size:13px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer">В корзину</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  function showProductModal(p) {
+    document.getElementById('modal-product-name').textContent = p.name;
+    document.getElementById('modal-product-desc').textContent = p.description || 'Описание отсутствует';
+    document.getElementById('modal-product-price').textContent = Number(p.price).toLocaleString('ru-RU') + ' ₽';
+
+    const img = document.getElementById('modal-product-image');
+    const placeholder = document.getElementById('modal-product-placeholder');
+    if (p.image) {
+      img.src = p.image; img.style.display = 'block';
+      placeholder.style.display = 'none';
+    } else {
+      img.style.display = 'none';
+      placeholder.style.display = 'flex';
+      placeholder.textContent = p.emoji || '✦';
+    }
+
+    const addBtn = document.getElementById('modal-add-btn');
+    addBtn.onclick = () => {
+      if (typeof Cart !== 'undefined') Cart.add(p);
+      addBtn.textContent = '✓ Добавлено';
+      addBtn.style.background = 'var(--color-accent, #D4847A)';
+      setTimeout(() => {
+        addBtn.textContent = 'В корзину';
+        addBtn.style.background = '#1A1A1A';
+      }, 1500);
+    };
+
+    const modal = document.getElementById('product-modal-view');
+    modal.style.display = 'flex';
+    modal.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; };
+  }
+  </script>
 </body>
 </html>
