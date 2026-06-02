@@ -674,12 +674,16 @@ Instagram: @masura</p>
   <!-- Product Modal -->
   <div id="product-modal" class="product-modal-overlay" onclick="if(event.target===this)closeModal()">
     <div class="product-modal">
-      <div class="product-modal__img-wrap" id="modal-img-wrap">
+      <div style="display:flex;flex-direction:column;gap:0">
+        <div class="product-modal__img-wrap" id="modal-img-wrap">
         <img id="modal-img" src="" alt="" class="product-modal__img" style="display:none">
         <div id="modal-ph" class="product-modal__ph"></div>
+        </div>
+        <div id="modal-gallery" style="display:none;grid-template-columns:repeat(4,1fr);gap:4px;padding:4px;background:#f7f7f7"></div>
       </div>
       <div class="product-modal__body">
         <button class="product-modal__close" onclick="closeModal()">×</button>
+        <p id="modal-sku" style="font-family:var(--font-body);font-size:11px;letter-spacing:0.1em;color:#aaa;margin-bottom:8px"></p>
         <h2 id="modal-name" class="product-modal__name"></h2>
         <div id="modal-price" class="product-modal__price"></div>
         <p id="modal-desc" class="product-modal__desc"></p>
@@ -710,6 +714,12 @@ Instagram: @masura</p>
       document.getElementById('modal-name').textContent = p.name || '';
       document.getElementById('modal-desc').textContent = p.description || '';
       document.getElementById('modal-price').textContent = Number(p.price).toLocaleString('ru-RU') + ' ₽';
+
+      // SKU
+      var skuEl = document.getElementById('modal-sku');
+      if (skuEl) skuEl.textContent = p.sku ? 'Арт. ' + p.sku : '';
+
+      // Main image
       var img = document.getElementById('modal-img');
       var ph  = document.getElementById('modal-ph');
       if (p.image) {
@@ -718,6 +728,21 @@ Instagram: @masura</p>
         img.style.display = 'none'; ph.style.display = 'flex';
         ph.textContent = p.emoji || '✦';
       }
+
+      // Gallery
+      var galleryEl = document.getElementById('modal-gallery');
+      if (galleryEl) {
+        var allPhotos = [p.image].filter(Boolean).concat(p.gallery || []);
+        if (allPhotos.length > 1) {
+          galleryEl.style.display = 'grid';
+          galleryEl.innerHTML = allPhotos.map(function(url) {
+            return '<img src="' + url + '" onclick="document.getElementById('modal-img').src=this.src;document.getElementById('modal-img').style.display='block';document.getElementById('modal-ph').style.display='none'" style="width:100%;aspect-ratio:1;object-fit:contain;cursor:pointer;border:1px solid #e8e8e8;padding:4px;background:#fff">';
+          }).join('');
+        } else {
+          galleryEl.style.display = 'none';
+        }
+      }
+
       var btn = document.getElementById('modal-btn');
       btn.textContent = 'В корзину'; btn.style.background = '';
       document.getElementById('product-modal').classList.add('open');
