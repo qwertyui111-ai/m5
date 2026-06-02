@@ -384,6 +384,79 @@
     .toast-hide { animation: toastOut 0.3s ease forwards; }
     @keyframes toastOut { to { opacity:0; transform: translateX(-50%) translateY(8px); } }
 
+
+    /* ---- Footer ---- */
+    .site-footer {
+      background: #f5f5f5;
+      padding: 60px 0 32px;
+      margin-top: 40px;
+    }
+    .site-footer__inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 32px;
+    }
+    .site-footer__grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 48px;
+      padding-bottom: 48px;
+      border-bottom: 1px solid #e8e8e8;
+    }
+    .site-footer__logo {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 400;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #111;
+      text-decoration: none;
+      display: block;
+      margin-bottom: 16px;
+    }
+    .site-footer__desc {
+      font-family: var(--font-body);
+      font-size: 12px;
+      color: #888;
+      line-height: 1.7;
+      white-space: pre-line;
+    }
+    .site-footer__col-title {
+      font-family: var(--font-body);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #111;
+      margin-bottom: 16px;
+    }
+    .site-footer__col-text {
+      font-family: var(--font-body);
+      font-size: 12px;
+      color: #888;
+      line-height: 1.9;
+      white-space: pre-line;
+    }
+    .site-footer__bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 24px;
+      font-family: var(--font-body);
+      font-size: 11px;
+      color: #aaa;
+    }
+    @media (max-width: 900px) {
+      .site-footer__grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
+      }
+      .site-footer__inner { padding: 0 16px; }
+    }
+    @media (max-width: 480px) {
+      .site-footer__grid { grid-template-columns: 1fr; }
+    }
+
     /* Modal */
     .product-modal-overlay {
       display: none;
@@ -563,6 +636,41 @@
     </div>
   </div>
 
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="site-footer__inner">
+      <div class="site-footer__grid">
+        <div>
+          <a href="index.html" class="site-footer__logo">Masura</a>
+          <p class="site-footer__desc" id="footer-about">Профессиональная косметика для маникюра. Широкий ассортимент лаков, гель-лаков и средств по уходу за ногтями.</p>
+        </div>
+        <div>
+          <p class="site-footer__col-title">Помощь</p>
+          <p class="site-footer__col-text" id="footer-help">Доставка и оплата
+Возврат товара
+Часто задаваемые вопросы</p>
+        </div>
+        <div>
+          <p class="site-footer__col-title">Информация</p>
+          <p class="site-footer__col-text" id="footer-info">Политика конфиденциальности
+Пользовательское соглашение
+Реквизиты</p>
+        </div>
+        <div>
+          <p class="site-footer__col-title">Контакты</p>
+          <p class="site-footer__col-text" id="footer-contacts">Email: info@masura.ru
+Телефон: +7 (000) 000-00-00
+Instagram: @masura</p>
+        </div>
+      </div>
+      <div class="site-footer__bottom">
+        <span>© 2025 Masura. Все права защищены.</span>
+        <span>Профессиональная косметика</span>
+      </div>
+    </div>
+  </footer>
+
   <!-- Product Modal -->
   <div id="product-modal" class="product-modal-overlay" onclick="if(event.target===this)closeModal()">
     <div class="product-modal">
@@ -657,6 +765,13 @@
         const b2 = document.getElementById('hero-banner-2');
         b2.innerHTML = `<img src="${settings.heroBanner2}" alt="Banner 2" style="width:100%;height:100%;object-fit:cover">`;
       }
+
+
+      // Footer
+      if (settings?.footerAbout)    document.getElementById('footer-about').textContent    = settings.footerAbout;
+      if (settings?.footerHelp)     document.getElementById('footer-help').textContent     = settings.footerHelp;
+      if (settings?.footerInfo)     document.getElementById('footer-info').textContent     = settings.footerInfo;
+      if (settings?.footerContacts) document.getElementById('footer-contacts').textContent = settings.footerContacts;
 
       renderFilters(categories);
       renderProducts(products, categories, 'all');
