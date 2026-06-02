@@ -398,7 +398,8 @@ async function loadSettings() {
   document.getElementById('s-cta').value      = s.heroCta      || '';
   document.getElementById('s-tag').value      = s.heroTag      || '';
   document.getElementById('s-marquee').value  = (s.marqueeItems || []).join(', ');
-  document.getElementById('s-image').value     = s.heroImage  || '';
+  document.getElementById('s-banner1').value   = s.heroBanner1 || '';
+  document.getElementById('s-banner2').value   = s.heroBanner2 || '';
 }
 
 document.getElementById('save-settings-btn').addEventListener('click', async () => {
@@ -410,7 +411,8 @@ document.getElementById('save-settings-btn').addEventListener('click', async () 
     heroCta:      document.getElementById('s-cta').value.trim(),
     heroTag:      document.getElementById('s-tag').value.trim(),
     marqueeItems: marqueeRaw.split(',').map(s => s.trim()).filter(Boolean),
-    heroImage:    document.getElementById('s-image').value.trim(),
+    heroBanner1:  document.getElementById('s-banner1').value.trim(),
+    heroBanner2:  document.getElementById('s-banner2').value.trim(),
   });
   toast('Настройки сохранены ✓');
 });
