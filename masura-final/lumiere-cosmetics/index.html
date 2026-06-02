@@ -749,6 +749,14 @@ Instagram: @masura</p>
         getActiveProducts(), getCategories(), getSettings()
       ]);
 
+      // Logo image
+      if (settings?.logoImage) {
+        const logoEl = document.querySelector('.site-nav__logo');
+        if (logoEl) {
+          logoEl.innerHTML = `<img src="${settings.logoImage}" alt="Masura" style="height:32px;object-fit:contain">`;
+        }
+      }
+
       // Marquee
       if (settings?.marqueeItems?.length) {
         const items = [...settings.marqueeItems, ...settings.marqueeItems];
