@@ -392,36 +392,27 @@ window.changeOrderStatus = async (id, status) => {
 
 async function loadSettings() {
   const s = await getSettings();
-  document.getElementById('s-eyebrow').value  = s.heroEyebrow  || '';
-  document.getElementById('s-title').value    = s.heroTitle    || '';
-  document.getElementById('s-subtitle').value = s.heroSubtitle || '';
-  document.getElementById('s-cta').value      = s.heroCta      || '';
-  document.getElementById('s-tag').value      = s.heroTag      || '';
-  document.getElementById('s-marquee').value  = (s.marqueeItems || []).join(', ');
-  document.getElementById('s-banner1').value      = s.heroBanner1    || '';
-  document.getElementById('s-banner2').value      = s.heroBanner2    || '';
-  document.getElementById('s-footer-about').value    = s.footerAbout    || '';
-  document.getElementById('s-footer-help').value     = s.footerHelp     || '';
-  document.getElementById('s-footer-info').value     = s.footerInfo     || '';
-  document.getElementById('s-footer-contacts').value = s.footerContacts || '';
-  document.getElementById('s-banner2').value   = s.heroBanner2 || '';
+  document.getElementById('s-logo-image').value      = s.logoImage      || '';
+  document.getElementById('s-marquee').value          = (s.marqueeItems || []).join(', ');
+  document.getElementById('s-banner1').value          = s.heroBanner1   || '';
+  document.getElementById('s-banner2').value          = s.heroBanner2   || '';
+  document.getElementById('s-footer-about').value     = s.footerAbout   || '';
+  document.getElementById('s-footer-help').value      = s.footerHelp    || '';
+  document.getElementById('s-footer-info').value      = s.footerInfo    || '';
+  document.getElementById('s-footer-contacts').value  = s.footerContacts|| '';
 }
 
 document.getElementById('save-settings-btn').addEventListener('click', async () => {
   const marqueeRaw = document.getElementById('s-marquee').value;
   await saveSettings({
-    heroEyebrow:  document.getElementById('s-eyebrow').value.trim(),
-    heroTitle:    document.getElementById('s-title').value.trim(),
-    heroSubtitle: document.getElementById('s-subtitle').value.trim(),
-    heroCta:      document.getElementById('s-cta').value.trim(),
-    heroTag:      document.getElementById('s-tag').value.trim(),
+    logoImage:    document.getElementById('s-logo-image').value.trim(),
     marqueeItems: marqueeRaw.split(',').map(s => s.trim()).filter(Boolean),
     heroBanner1:  document.getElementById('s-banner1').value.trim(),
-    heroBanner2:     document.getElementById('s-banner2').value.trim(),
-    footerAbout:     document.getElementById('s-footer-about').value.trim(),
-    footerHelp:      document.getElementById('s-footer-help').value.trim(),
-    footerInfo:      document.getElementById('s-footer-info').value.trim(),
-    footerContacts:  document.getElementById('s-footer-contacts').value.trim(),
+    heroBanner2:  document.getElementById('s-banner2').value.trim(),
+    footerAbout:  document.getElementById('s-footer-about').value.trim(),
+    footerHelp:   document.getElementById('s-footer-help').value.trim(),
+    footerInfo:   document.getElementById('s-footer-info').value.trim(),
+    footerContacts: document.getElementById('s-footer-contacts').value.trim(),
   });
   toast('Настройки сохранены ✓');
 });
