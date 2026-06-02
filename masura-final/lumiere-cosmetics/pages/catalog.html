@@ -137,7 +137,7 @@
       const getCatLabel = id => categories.find(c => c.id === id)?.label || id;
 
       grid.innerHTML = products.map(p => `
-        <article class="product-card animate-fade-up">
+        <article class="product-card animate-fade-up" onclick="if(!event.target.closest('.product-card__add-btn')){var id=this.querySelector('.product-card__add-btn')?.dataset.id;var p=(window._allProducts||[]).find(x=>x.id===id);if(p&&window.showProductModal)window.showProductModal(p)}" style="cursor:pointer">
           ${p.badge ? `<span class="product-card__badge ${p.badge === 'New' ? 'product-card__badge--new' : ''}">${p.badge}</span>` : ''}
           <div class="product-card__image-wrap">
             ${p.image
