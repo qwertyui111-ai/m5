@@ -221,7 +221,7 @@
   </div>
 
   <script>
-  function showProductModal(p) {
+  window.showProductModal = function(p) {
     document.getElementById('modal-product-name').textContent = p.name;
     document.getElementById('modal-product-desc').textContent = p.description || 'Описание отсутствует';
     document.getElementById('modal-product-price').textContent = Number(p.price).toLocaleString('ru-RU') + ' ₽';
