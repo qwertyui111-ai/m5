@@ -161,9 +161,19 @@
       `).join('');
 
       grid.querySelectorAll('.product-card__add-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          if (typeof Cart !== 'undefined') Cart.add(btn.dataset.id);
-          else showToast('Добавлено в корзину');
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const id = btn.dataset.id;
+          const product = (window._allProducts || []).find(p => p.id === id);
+          if (typeof Cart !== 'undefined' && product) {
+            Cart.add(product);
+            btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>';
+            btn.style.background = 'var(--color-accent)';
+            setTimeout(() => {
+              btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>';
+              btn.style.background = '';
+            }, 1500);
+          }
         });
       });
     }
@@ -171,7 +181,7 @@
     init();
   </script>
 
-<!-- Секретная кнопка админки -->
+
 
 
 </body>
