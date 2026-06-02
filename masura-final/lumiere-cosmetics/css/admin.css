@@ -819,3 +819,21 @@ body {
     display: flex !important;
   }
 }
+
+/* Equal height form row columns */
+.form-row {
+  align-items: stretch;
+}
+.form-row .form-group {
+  display: flex;
+  flex-direction: column;
+}
+.form-row .form-group input,
+.form-row .form-group select {
+  flex: 1;
+}
+#pm-name {
+  height: 100%;
+  min-height: 160px;
+  resize: none;
+}
