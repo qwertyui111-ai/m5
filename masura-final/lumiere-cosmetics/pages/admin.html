@@ -223,6 +223,10 @@
       </div>
       <div class="form-group"><label>Описание</label><textarea id="pm-description" rows="2"></textarea></div>
       <div class="form-row">
+        <div class="form-group"><label>Артикул</label><input type="text" id="pm-article" placeholder="ML108"></div>
+        <div class="form-group"><label>URL фото</label><input type="text" id="pm-image" placeholder="https://cdn1.ozone.ru/...jpg"></div>
+      </div>
+      <div class="form-row">
         <div class="form-group"><label>Цена (₽) *</label><input type="number" id="pm-price" placeholder="2500" min="0"></div>
         <div class="form-group"><label>Метка</label>
           <select id="pm-badge">
@@ -234,6 +238,12 @@
         </div>
       </div>
       <div class="form-group"><label>Иконка-эмодзи</label><input type="text" id="pm-emoji" placeholder="✦" maxlength="2"></div>
+      <div class="form-group"><label>Артикул</label><input type="text" id="pm-sku" placeholder="ML108"></div>
+      <div class="form-group">
+        <label>Дополнительные фото (после основного)</label>
+        <div id="pm-gallery-list" style="display:flex;flex-direction:column;gap:8px;margin-bottom:8px"></div>
+        <button type="button" class="btn btn-outline btn-sm" id="pm-add-photo-btn">+ Добавить фото</button>
+      </div>
 
       <!-- Характеристики -->
       <div class="tags-section">
