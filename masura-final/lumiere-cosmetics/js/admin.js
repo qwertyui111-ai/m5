@@ -178,10 +178,20 @@ function renderProductsTable(products) {
 function bindProductSearch() {
   const input = document.getElementById('product-search');
   input.oninput = () => {
-    const q = input.value.toLowerCase();
-    renderProductsTable(allProducts.filter(p =>
-      p.name.toLowerCase().includes(q) || p.description?.toLowerCase().includes(q)
-    ));
+    const q = input.value.toLowerCase().trim();
+    renderProductsTable(allProducts.filter(p => {
+      if (!q) return true;
+      return [
+        p.name,
+        p.sku,
+        p.category,
+        ...(p.categories || []),
+        p.description,
+        p.color,
+        p.effect,
+        p.productType
+      ].some(v => (v || '').toLowerCase().includes(q));
+    }));
   };
 }
 
