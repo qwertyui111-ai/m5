@@ -1,22 +1,18 @@
 /**
- * LUMIÈRE — Cart
- * ==============
- * Uses localStorage for persistence across pages.
- * Dispatches custom events so any page can react to changes.
+ * MASURA — Cart
+ * Хранит товары в localStorage.
+ * Товар добавляется вместе с данными (name, price, image)
+ * чтобы не зависеть от products.js
  */
 
 const Cart = (() => {
-  const STORAGE_KEY = 'lumiere_cart';
+  const STORAGE_KEY = 'masura_cart';
 
-  // ---- Internal state ----
   let items = load();
 
   function load() {
-    try {
-      return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-    } catch {
-      return [];
-    }
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+    catch { return []; }
   }
 
   function save() {
@@ -24,19 +20,35 @@ const Cart = (() => {
     document.dispatchEvent(new CustomEvent('cart:updated', { detail: { items } }));
   }
 
-  // ---- Public API ----
-  function add(productId, qty = 1) {
-    const product = getProductById(productId);
-    if (!product) return;
+  // Добавить товар — принимает id или объект товара
+  function add(productIdOrObj, qty = 1) {
+    let id, productData;
 
-    const existing = items.find(i => i.id === productId);
+    if (typeof productIdOrObj === 'object') {
+      id = productIdOrObj.id;
+      productData = productIdOrObj;
+    } else {
+      id = productIdOrObj;
+      productData = null;
+    }
+
+    const existing = items.find(i => i.id === id);
     if (existing) {
       existing.qty += qty;
     } else {
-      items.push({ id: productId, qty });
+      items.push({
+        id,
+        qty,
+        name:  productData?.name  || '',
+        price: productData?.price || 0,
+        image: productData?.image || null,
+        emoji: productData?.emoji || '✦',
+        category: productData?.category || '',
+      });
     }
     save();
-    showToast(`«${product.name}» добавлен в корзину`);
+    const name = productData?.name || existing?.name || '';
+    if (name) showToast(`«${name}» добавлен в корзину`);
   }
 
   function remove(productId) {
@@ -47,49 +59,35 @@ const Cart = (() => {
   function setQty(productId, qty) {
     if (qty < 1) { remove(productId); return; }
     const existing = items.find(i => i.id === productId);
-    if (existing) {
-      existing.qty = qty;
-      save();
-    }
+    if (existing) { existing.qty = qty; save(); }
   }
 
-  function clear() {
-    items = [];
-    save();
-  }
+  function clear() { items = []; save(); }
 
   function getItems() {
     return items.map(i => ({
       ...i,
-      product: getProductById(i.id),
-    })).filter(i => i.product);
+      product: {
+        id: i.id,
+        name: i.name,
+        price: i.price,
+        image: i.image,
+        emoji: i.emoji,
+        category: i.category,
+      }
+    }));
   }
 
-  function getCount() {
-    return items.reduce((sum, i) => sum + i.qty, 0);
-  }
-
-  function getSubtotal() {
-    return getItems().reduce((sum, i) => sum + i.product.price * i.qty, 0);
-  }
-
-  function getDelivery() {
-    const sub = getSubtotal();
-    return sub === 0 ? 0 : sub >= 5000 ? 0 : 390;
-  }
-
-  function getTotal() {
-    return getSubtotal() + getDelivery();
-  }
+  function getCount() { return items.reduce((s, i) => s + i.qty, 0); }
+  function getSubtotal() { return items.reduce((s, i) => s + i.price * i.qty, 0); }
+  function getDelivery() { const sub = getSubtotal(); return sub === 0 ? 0 : sub >= 5000 ? 0 : 390; }
+  function getTotal() { return getSubtotal() + getDelivery(); }
 
   return { add, remove, setQty, clear, getItems, getCount, getSubtotal, getDelivery, getTotal };
 })();
 
-// ---- Toast helper ----
 function showToast(message, duration = 3000) {
-  // Remove existing toast
   document.querySelectorAll('.toast').forEach(t => t.remove());
-
   const toast = document.createElement('div');
   toast.className = 'toast';
   toast.innerHTML = `
@@ -99,14 +97,12 @@ function showToast(message, duration = 3000) {
     ${message}
   `;
   document.body.appendChild(toast);
-
   setTimeout(() => {
     toast.classList.add('toast-hide');
     setTimeout(() => toast.remove(), 300);
   }, duration);
 }
 
-// ---- Update nav badge on every page ----
 function updateCartBadge() {
   const count = Cart.getCount();
   document.querySelectorAll('.nav__cart-count').forEach(el => {
