@@ -137,7 +137,7 @@
       const getCatLabel = id => categories.find(c => c.id === id)?.label || id;
 
       grid.innerHTML = products.map(p => `
-        <article class="product-card animate-fade-up" onclick="if(!event.target.closest('.product-card__add-btn')){var id=this.querySelector('.product-card__add-btn')?.dataset.id;var p=(window._allProducts||[]).find(x=>x.id===id);if(p&&window.showProductModal)window.showProductModal(p)}" style="cursor:pointer">
+        <article class="product-card animate-fade-up" style="cursor:pointer" data-id="${p.id}">
           ${p.badge ? `<span class="product-card__badge ${p.badge === 'New' ? 'product-card__badge--new' : ''}">${p.badge}</span>` : ''}
           <div class="product-card__image-wrap">
             ${p.image
@@ -189,18 +189,7 @@
 
 
   
-  <script>
-  // Делегирование клика на карточку товара
-  document.addEventListener('click', function(e) {
-    const card = e.target.closest('.product-card');
-    if (!card) return;
-    if (e.target.closest('.product-card__add-btn')) return;
-    const id = card.querySelector('.product-card__add-btn')?.dataset.id;
-    const product = (window._allProducts || []).find(p => p.id === id);
-    if (!product) return;
-    showProductModal(product);
-  });
-  </script>
+  
   <!-- Product Modal -->
   <div id="product-modal-view" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1000;align-items:center;justify-content:center;padding:16px">
     <div style="background:#fff;border-radius:16px;max-width:480px;width:100%;max-height:90vh;overflow-y:auto">
@@ -258,6 +247,21 @@
     modal.style.display = 'flex';
     modal.onclick = function(e) { if (e.target === modal) modal.style.display = 'none'; };
   };
+  </script>
+
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('product-grid').addEventListener('click', function(e) {
+      if (e.target.closest('.product-card__add-btn')) return;
+      var card = e.target.closest('.product-card');
+      if (!card) return;
+      var id = card.dataset.id;
+      if (!id) return;
+      var p = (window._allProducts || []).find(function(x){ return x.id === id; });
+      if (!p) return;
+      if (typeof window.showProductModal === 'function') window.showProductModal(p);
+    });
+  });
   </script>
 </body>
 </html>
