@@ -152,8 +152,8 @@ function renderProductsTable(products) {
   tbody.innerHTML = products.map(p => `
     <tr data-id="${p.id}">
       <td>
-        <div style="display:flex;align-items:center;gap:12px">
-          <div class="product-emoji">${p.emoji || '✦'}</div>
+        <div style="display:flex;align-items:center;gap:8px">
+          ${p.favorite ? '<span title="Избранное" style="font-size:14px">⭐</span>' : ''}
           <span style="font-weight:400">${p.name}</span>
         </div>
       </td>
