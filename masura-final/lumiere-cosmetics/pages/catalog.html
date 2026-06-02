@@ -221,6 +221,13 @@
   </div>
 
   <script>
+    const modal = document.getElementById('product-modal-view');
+    modal.style.display = 'flex';
+    modal.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; };
+  }
+  </script>
+
+  <script>
   window.showProductModal = function(p) {
     document.getElementById('modal-product-name').textContent = p.name;
     document.getElementById('modal-product-desc').textContent = p.description || 'Описание отсутствует';
@@ -247,11 +254,7 @@
         addBtn.style.background = '#1A1A1A';
       }, 1500);
     };
-
-    const modal = document.getElementById('product-modal-view');
-    modal.style.display = 'flex';
-    modal.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; };
-  }
   </script>
+
 </body>
 </html>
