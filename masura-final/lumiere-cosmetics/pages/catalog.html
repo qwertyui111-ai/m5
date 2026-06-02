@@ -127,6 +127,9 @@
         window._allProducts   = products;
         window._allCategories = categories;
       }
+      // Сохраняем все товары в map для быстрого доступа по id
+      if (!window._productMap) window._productMap = {};
+      products.forEach(p => { window._productMap[p.id] = p; });
       const grid = document.getElementById('product-grid');
 
       if (products.length === 0) {
@@ -137,7 +140,7 @@
       const getCatLabel = id => categories.find(c => c.id === id)?.label || id;
 
       grid.innerHTML = products.map(p => `
-        <article class="product-card animate-fade-up" style="cursor:pointer" data-id="${p.id}">
+        <article class="product-card animate-fade-up" style="cursor:pointer" onclick="window._openProduct('${p.id}')">
           ${p.badge ? `<span class="product-card__badge ${p.badge === 'New' ? 'product-card__badge--new' : ''}">${p.badge}</span>` : ''}
           <div class="product-card__image-wrap">
             ${p.image
@@ -249,19 +252,15 @@
   };
   </script>
 
+  
+
   <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('product-grid').addEventListener('click', function(e) {
-      if (e.target.closest('.product-card__add-btn')) return;
-      var card = e.target.closest('.product-card');
-      if (!card) return;
-      var id = card.dataset.id;
-      if (!id) return;
-      var p = (window._allProducts || []).find(function(x){ return x.id === id; });
-      if (!p) return;
-      if (typeof window.showProductModal === 'function') window.showProductModal(p);
-    });
-  });
+  window._openProduct = function(id) {
+    var p = window._productMap && window._productMap[id];
+    if (!p) p = (window._allProducts || []).find(function(x){ return x.id === id; });
+    if (!p) return;
+    if (typeof window.showProductModal === 'function') window.showProductModal(p);
+  };
   </script>
 </body>
 </html>
