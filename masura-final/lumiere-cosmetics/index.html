@@ -3,60 +3,577 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Masura — Каталог</title>
+  <title>Masura</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/variables.css">
   <link rel="stylesheet" href="css/nav.css">
   <link rel="stylesheet" href="css/catalog.css">
+  <style>
+    /* ---- Marquee ---- */
+    .marquee-bar {
+      background: #111;
+      color: #fff;
+      padding: 9px 0;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+    .marquee-track {
+      display: inline-flex;
+      gap: 0;
+      animation: marquee 30s linear infinite;
+    }
+    .marquee-item {
+      font-family: var(--font-body);
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0 40px;
+      opacity: 0.85;
+    }
+    .marquee-item::after {
+      content: '·';
+      margin-left: 40px;
+      opacity: 0.4;
+    }
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    /* ---- Nav override for this page ---- */
+    .site-nav {
+      background: #fff;
+      border-bottom: 1px solid #e8e8e8;
+      height: 60px;
+      position: sticky;
+      top: 0;
+      z-index: 200;
+    }
+    .site-nav__inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 32px;
+      height: 60px;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+    }
+    .site-nav__left { display: flex; gap: 28px; }
+    .site-nav__link {
+      font-family: var(--font-body);
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #111;
+      text-decoration: none;
+      transition: opacity 0.15s;
+    }
+    .site-nav__link:hover { opacity: 0.45; }
+    .site-nav__link.active { border-bottom: 1px solid #111; padding-bottom: 1px; }
+    .site-nav__logo {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 400;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: #111;
+      text-decoration: none;
+      text-align: center;
+    }
+    .site-nav__right {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+    .site-nav__cart {
+      background: none;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-body);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #111;
+      text-decoration: none;
+      transition: opacity 0.15s;
+      position: relative;
+    }
+    .site-nav__cart:hover { opacity: 0.45; }
+    .site-nav__cart-count {
+      position: absolute;
+      top: -6px;
+      right: -8px;
+      background: #111;
+      color: #fff;
+      font-size: 9px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+    .site-nav__cart-count.visible { opacity: 1; }
+    .site-nav__hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+    }
+    .site-nav__hamburger span { width: 20px; height: 1px; background: #111; display: block; }
+
+    /* ---- Hero banners ---- */
+    .hero-banners {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      max-height: 520px;
+      overflow: hidden;
+    }
+    .hero-banner {
+      position: relative;
+      aspect-ratio: 3/2;
+      overflow: hidden;
+      background: #f5f5f5;
+    }
+    .hero-banner img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s ease;
+    }
+    .hero-banner:hover img { transform: scale(1.03); }
+    .hero-banner__placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-body);
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #aaa;
+    }
+
+    /* ---- Catalog section ---- */
+    .catalog-section {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 32px;
+    }
+    .catalog-section__title {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 400;
+      letter-spacing: 0.05em;
+      color: #111;
+      padding: 36px 0 0;
+      margin-bottom: 0;
+    }
+    .catalog-filters-bar {
+      display: flex;
+      gap: 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+      border-bottom: 1px solid #e8e8e8;
+      margin: 16px 0 0;
+    }
+    .catalog-filters-bar::-webkit-scrollbar { display: none; }
+    .filter-btn {
+      font-family: var(--font-body);
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #999;
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      padding: 12px 18px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: color 0.15s, border-color 0.15s;
+      margin-bottom: -1px;
+    }
+    .filter-btn:hover { color: #111; }
+    .filter-btn.active { color: #111; border-bottom-color: #111; }
+
+    /* Search */
+    .catalog-search-bar {
+      padding: 12px 0;
+      border-bottom: 1px solid #e8e8e8;
+    }
+    #catalog-search {
+      width: 100%;
+      font-family: var(--font-body);
+      font-size: 13px;
+      border: none;
+      background: transparent;
+      padding: 6px 0;
+      color: #111;
+      outline: none;
+    }
+    #catalog-search::placeholder { color: #bbb; }
+
+    /* Product grid */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      padding: 24px 0 80px;
+    }
+    .product-card {
+      cursor: pointer;
+      background: #fff;
+    }
+    .product-card__image-wrap {
+      position: relative;
+      aspect-ratio: 1;
+      background: #f7f7f7;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+    .product-card__image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+    .product-card:hover .product-card__image { transform: scale(1.04); }
+    .product-card__image-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      color: #ddd;
+    }
+    .product-card__overlay {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 12px;
+      background: linear-gradient(to top, rgba(0,0,0,0.25), transparent);
+      opacity: 0;
+      transition: opacity 0.25s;
+    }
+    .product-card:hover .product-card__overlay { opacity: 1; }
+    .product-card__quick-add {
+      width: 100%;
+      background: rgba(255,255,255,0.95);
+      color: #111;
+      border: none;
+      font-family: var(--font-body);
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 10px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .product-card__quick-add:hover { background: #fff; }
+    .product-card__badge {
+      position: absolute;
+      top: 10px; left: 10px;
+      background: #111;
+      color: #fff;
+      font-family: var(--font-body);
+      font-size: 9px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      z-index: 1;
+    }
+    .product-card__category {
+      font-family: var(--font-body);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #999;
+      margin-bottom: 4px;
+    }
+    .product-card__name {
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 400;
+      color: #111;
+      line-height: 1.4;
+      margin-bottom: 6px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .product-card__price {
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 500;
+      color: #111;
+    }
+
+    /* Loading */
+    .loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 60px 0;
+      color: #aaa;
+      font-family: var(--font-body);
+      font-size: 12px;
+      grid-column: 1/-1;
+    }
+    .spinner {
+      width: 18px; height: 18px;
+      border: 1.5px solid #e8e8e8;
+      border-top-color: #111;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .catalog-empty {
+      grid-column: 1/-1;
+      text-align: center;
+      padding: 80px 0;
+      font-family: var(--font-body);
+      font-size: 13px;
+      color: #aaa;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 32px; left: 50%;
+      transform: translateX(-50%);
+      background: #111; color: #fff;
+      font-family: var(--font-body);
+      font-size: 12px;
+      letter-spacing: 0.05em;
+      padding: 12px 24px;
+      z-index: 9999;
+      animation: toastIn 0.2s ease;
+    }
+    @keyframes toastIn { from { opacity:0; transform: translateX(-50%) translateY(8px); } }
+    .toast-hide { animation: toastOut 0.3s ease forwards; }
+    @keyframes toastOut { to { opacity:0; transform: translateX(-50%) translateY(8px); } }
+
+    /* Modal */
+    .product-modal-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.4);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .product-modal-overlay.open { display: flex; }
+    .product-modal {
+      background: #fff;
+      max-width: 860px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+    .product-modal__img-wrap {
+      background: #f7f7f7;
+      aspect-ratio: 1;
+    }
+    .product-modal__img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+    }
+    .product-modal__ph {
+      width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 80px;
+    }
+    .product-modal__body {
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+    }
+    .product-modal__close {
+      align-self: flex-end;
+      background: none; border: none;
+      font-size: 22px; cursor: pointer;
+      color: #aaa; margin-bottom: 20px;
+      line-height: 1;
+    }
+    .product-modal__name {
+      font-family: var(--font-display);
+      font-size: 22px; font-weight: 400;
+      color: #111; margin-bottom: 10px;
+      line-height: 1.3;
+    }
+    .product-modal__price {
+      font-family: var(--font-body);
+      font-size: 20px; font-weight: 500;
+      color: #111; margin-bottom: 20px;
+    }
+    .product-modal__desc {
+      font-family: var(--font-body);
+      font-size: 13px; color: #666;
+      line-height: 1.8; flex: 1;
+      margin-bottom: 24px;
+    }
+    .product-modal__btn {
+      width: 100%;
+      background: #111; color: #fff;
+      border: none;
+      font-family: var(--font-body);
+      font-size: 11px; font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 16px; cursor: pointer;
+      transition: background 0.15s;
+    }
+    .product-modal__btn:hover { background: #333; }
+
+    /* Mobile */
+    @media (max-width: 900px) {
+      .site-nav__inner { padding: 0 16px; }
+      .site-nav__left { display: none; }
+      .site-nav__left.open {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 60px; left: 0; right: 0;
+        background: #fff;
+        border-bottom: 1px solid #e8e8e8;
+        padding: 12px 0;
+        gap: 0;
+        z-index: 100;
+      }
+      .site-nav__link { padding: 10px 20px; }
+      .site-nav__hamburger { display: flex; }
+      .hero-banners { grid-template-columns: 1fr; max-height: none; }
+      .hero-banner { aspect-ratio: 4/3; }
+      .product-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 16px 0 60px; }
+      .catalog-section { padding: 0 16px; }
+      .product-modal { grid-template-columns: 1fr; }
+      .product-modal__img-wrap { aspect-ratio: 4/3; }
+      .product-modal__body { padding: 24px; }
+    }
+  </style>
 </head>
-<body style="background:var(--color-white);color:var(--color-text)">
+<body>
 
-  <header id="site-nav" class="nav" role="banner"></header>
+  <!-- Бегущая строка -->
+  <div class="marquee-bar">
+    <div class="marquee-track" id="marquee-track">
+      <span class="marquee-item">Профессиональная косметика</span>
+      <span class="marquee-item">Японский маникюр</span>
+      <span class="marquee-item">Быстрая доставка</span>
+      <span class="marquee-item">Широкий ассортимент</span>
+      <span class="marquee-item">Натуральные компоненты</span>
+      <span class="marquee-item">Cruelty-free</span>
+      <span class="marquee-item">Профессиональная косметика</span>
+      <span class="marquee-item">Японский маникюр</span>
+      <span class="marquee-item">Быстрая доставка</span>
+      <span class="marquee-item">Широкий ассортимент</span>
+      <span class="marquee-item">Натуральные компоненты</span>
+      <span class="marquee-item">Cruelty-free</span>
+    </div>
+  </div>
 
-  <main>
-    <div class="container">
-      <div class="catalog-header">
-        <h1 class="catalog-header__title">Каталог</h1>
+  <!-- Навигация -->
+  <nav class="site-nav">
+    <div class="site-nav__inner">
+      <div class="site-nav__left" id="site-nav-links">
+        <a href="index.html" class="site-nav__link active">Каталог</a>
+        <a href="pages/cart.html" class="site-nav__link">Корзина</a>
       </div>
-
-      <div class="catalog-filters-wrap" id="catalog-filters">
-        <div class="loading" style="padding:12px 0"><div class="spinner"></div></div>
-      </div>
-
-      <div class="catalog-search-wrap">
-        <input type="search" id="catalog-search" placeholder="Поиск по названию, цвету, эффекту..." oninput="filterProducts()">
-      </div>
-
-      <div class="product-grid" id="product-grid">
-        <div class="loading" style="grid-column:1/-1;padding:80px 0"><div class="spinner"></div></div>
+      <a href="index.html" class="site-nav__logo">Masura</a>
+      <div class="site-nav__right">
+        <a href="pages/cart.html" class="site-nav__cart">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+            <line x1="3" y1="6" x2="21" y2="6"/>
+            <path d="M16 10a4 4 0 01-8 0"/>
+          </svg>
+          <span class="site-nav__cart-count nav__cart-count" aria-live="polite"></span>
+        </a>
+        <button class="site-nav__hamburger" id="site-nav-hamburger" aria-label="Меню">
+          <span></span><span></span><span></span>
+        </button>
       </div>
     </div>
-  </main>
+  </nav>
+
+  <!-- Hero banners -->
+  <div class="hero-banners" id="hero-banners">
+    <div class="hero-banner" id="hero-banner-1">
+      <div class="hero-banner__placeholder">Фото 1</div>
+    </div>
+    <div class="hero-banner" id="hero-banner-2">
+      <div class="hero-banner__placeholder">Фото 2</div>
+    </div>
+  </div>
+
+  <!-- Каталог -->
+  <div class="catalog-section">
+    <h2 class="catalog-section__title">Каталог</h2>
+
+    <div class="catalog-filters-bar" id="catalog-filters">
+      <div class="loading" style="padding:12px 0;grid-column:unset"><div class="spinner"></div></div>
+    </div>
+
+    <div class="catalog-search-bar">
+      <input type="search" id="catalog-search" placeholder="Поиск по названию, цвету, эффекту..." oninput="filterProducts()">
+    </div>
+
+    <div class="product-grid" id="product-grid">
+      <div class="loading"><div class="spinner"></div></div>
+    </div>
+  </div>
 
   <!-- Product Modal -->
   <div id="product-modal" class="product-modal-overlay" onclick="if(event.target===this)closeModal()">
     <div class="product-modal">
-      <div class="product-modal__image-wrap" id="modal-image-wrap">
-        <img id="modal-image" src="" alt="" class="product-modal__image" style="display:none">
-        <div id="modal-placeholder" class="product-modal__placeholder"></div>
+      <div class="product-modal__img-wrap" id="modal-img-wrap">
+        <img id="modal-img" src="" alt="" class="product-modal__img" style="display:none">
+        <div id="modal-ph" class="product-modal__ph"></div>
       </div>
-      <div class="product-modal__content">
+      <div class="product-modal__body">
         <button class="product-modal__close" onclick="closeModal()">×</button>
         <h2 id="modal-name" class="product-modal__name"></h2>
         <div id="modal-price" class="product-modal__price"></div>
         <p id="modal-desc" class="product-modal__desc"></p>
-        <button id="modal-add-btn" class="product-modal__add-btn" onclick="modalAddToCart()">В корзину</button>
+        <button id="modal-btn" class="product-modal__btn" onclick="modalAddToCart()">В корзину</button>
       </div>
     </div>
   </div>
 
-  <script src="js/nav.js"></script>
   <script src="js/cart.js"></script>
 
   <script>
-    var currentModalProduct = null;
+    // Mobile menu
+    document.getElementById('site-nav-hamburger').addEventListener('click', function() {
+      document.getElementById('site-nav-links').classList.toggle('open');
+    });
+
+    // Modal
+    var currentProduct = null;
 
     function closeModal() {
       document.getElementById('product-modal').classList.remove('open');
@@ -65,30 +582,28 @@
     function openProductModal(id) {
       var p = (window._allProducts || []).find(function(x){ return x.id === id; });
       if (!p) return;
-      currentModalProduct = p;
+      currentProduct = p;
       document.getElementById('modal-name').textContent = p.name || '';
       document.getElementById('modal-desc').textContent = p.description || '';
       document.getElementById('modal-price').textContent = Number(p.price).toLocaleString('ru-RU') + ' ₽';
-      var img = document.getElementById('modal-image');
-      var ph  = document.getElementById('modal-placeholder');
+      var img = document.getElementById('modal-img');
+      var ph  = document.getElementById('modal-ph');
       if (p.image) {
         img.src = p.image; img.style.display = 'block'; ph.style.display = 'none';
       } else {
         img.style.display = 'none'; ph.style.display = 'flex';
         ph.textContent = p.emoji || '✦';
       }
-      var btn = document.getElementById('modal-add-btn');
-      btn.textContent = 'В корзину';
-      btn.style.background = '';
+      var btn = document.getElementById('modal-btn');
+      btn.textContent = 'В корзину'; btn.style.background = '';
       document.getElementById('product-modal').classList.add('open');
     }
 
     function modalAddToCart() {
-      if (!currentModalProduct) return;
-      Cart.add(currentModalProduct);
-      var btn = document.getElementById('modal-add-btn');
-      btn.textContent = '✓ Добавлено';
-      btn.style.background = '#555';
+      if (!currentProduct) return;
+      Cart.add(currentProduct);
+      var btn = document.getElementById('modal-btn');
+      btn.textContent = '✓ Добавлено'; btn.style.background = '#555';
     }
 
     function addToCartFromCard(id, event) {
@@ -97,24 +612,36 @@
       if (!p) return;
       Cart.add(p);
       var btn = event.currentTarget;
-      btn.textContent = '✓';
-      btn.style.background = '#111';
-      btn.style.color = '#fff';
-      setTimeout(function() {
-        btn.textContent = 'В корзину';
-        btn.style.background = '';
-        btn.style.color = '';
-      }, 1500);
+      btn.textContent = '✓ Добавлено';
+      setTimeout(function() { btn.textContent = 'В корзину'; }, 1500);
     }
   </script>
 
   <script type="module">
-    import { getActiveProducts, getCategories } from './js/db.js';
-
-    renderNav('catalog');
+    import { getActiveProducts, getCategories, getSettings } from './js/db.js';
 
     async function init() {
-      const [products, categories] = await Promise.all([getActiveProducts(), getCategories()]);
+      const [products, categories, settings] = await Promise.all([
+        getActiveProducts(), getCategories(), getSettings()
+      ]);
+
+      // Marquee
+      if (settings?.marqueeItems?.length) {
+        const items = [...settings.marqueeItems, ...settings.marqueeItems];
+        document.getElementById('marquee-track').innerHTML =
+          items.map(i => `<span class="marquee-item">${i}</span>`).join('');
+      }
+
+      // Hero banners
+      if (settings?.heroBanner1) {
+        const b1 = document.getElementById('hero-banner-1');
+        b1.innerHTML = `<img src="${settings.heroBanner1}" alt="Banner 1" style="width:100%;height:100%;object-fit:cover">`;
+      }
+      if (settings?.heroBanner2) {
+        const b2 = document.getElementById('hero-banner-2');
+        b2.innerHTML = `<img src="${settings.heroBanner2}" alt="Banner 2" style="width:100%;height:100%;object-fit:cover">`;
+      }
+
       renderFilters(categories);
       renderProducts(products, categories, 'all');
     }
@@ -125,7 +652,6 @@
       container.innerHTML = all.map(c =>
         `<button class="filter-btn ${c.id === 'all' ? 'active' : ''}" data-category="${c.id}">${c.label}</button>`
       ).join('');
-
       container.addEventListener('click', e => {
         const btn = e.target.closest('.filter-btn');
         if (!btn) return;
@@ -168,7 +694,7 @@
       const getCatLabel = id => (categories || []).find(c => c.id === id)?.label || '';
       grid.innerHTML = products.map(p => `
         <article class="product-card" onclick="openProductModal('${p.id}')">
-          ${p.badge ? `<span class="product-card__badge ${p.badge === 'New' ? 'product-card__badge--new' : ''}">${p.badge}</span>` : ''}
+          ${p.badge ? `<span class="product-card__badge">${p.badge}</span>` : ''}
           <div class="product-card__image-wrap">
             ${p.image ? `<img class="product-card__image" src="${p.image}" alt="${p.name}" loading="lazy">` : ''}
             <div class="product-card__image-placeholder" style="${p.image ? 'display:none' : ''}">${p.emoji || ''}</div>
@@ -176,7 +702,7 @@
               <button class="product-card__quick-add" onclick="addToCartFromCard('${p.id}', event)">В корзину</button>
             </div>
           </div>
-          <div class="product-card__info">
+          <div>
             <p class="product-card__category">${getCatLabel(p.category)}</p>
             <h3 class="product-card__name">${p.name}</h3>
             <div class="product-card__price">${Number(p.price).toLocaleString('ru-RU')} ₽</div>
