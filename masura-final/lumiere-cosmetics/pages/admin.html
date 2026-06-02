@@ -157,20 +157,34 @@
           <label>Элементы (через запятую)</label>
           <input type="text" id="s-marquee" placeholder="Профессиональная косметика, Японский маникюр, Cruelty-free">
         </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Цвет фона</label>
+            <input type="color" id="s-marquee-bg" value="#111111" style="width:60px;height:36px;border:1px solid #E5D5C5;border-radius:6px;cursor:pointer;padding:2px">
+          </div>
+          <div class="form-group">
+            <label>Цвет текста</label>
+            <input type="color" id="s-marquee-color" value="#ffffff" style="width:60px;height:36px;border:1px solid #E5D5C5;border-radius:6px;cursor:pointer;padding:2px">
+          </div>
+        </div>
       </div>
 
       <!-- Баннеры -->
       <div class="settings-card">
-        <h2 class="settings-card__title">Два баннера под навигацией</h2>
-        <div class="form-row">
-          <div class="form-group">
-            <label>URL баннера 1 (верхний)</label>
-            <input type="text" id="s-banner1" placeholder="https://...jpg">
+        <h2 class="settings-card__title">Баннеры под навигацией</h2>
+        <div class="form-group">
+          <div class="toggle-row">
+            <label for="s-banner1-enabled">Показывать баннер 1 (верхний)</label>
+            <label class="toggle"><input type="checkbox" id="s-banner1-enabled" checked><span class="toggle__slider"></span></label>
           </div>
-          <div class="form-group">
-            <label>URL баннера 2 (нижний)</label>
-            <input type="text" id="s-banner2" placeholder="https://...jpg">
+          <input type="text" id="s-banner1" placeholder="https://...jpg" style="margin-top:8px">
+        </div>
+        <div class="form-group">
+          <div class="toggle-row">
+            <label for="s-banner2-enabled">Показывать баннер 2 (нижний)</label>
+            <label class="toggle"><input type="checkbox" id="s-banner2-enabled" checked><span class="toggle__slider"></span></label>
           </div>
+          <input type="text" id="s-banner2" placeholder="https://...jpg" style="margin-top:8px">
         </div>
       </div>
 
