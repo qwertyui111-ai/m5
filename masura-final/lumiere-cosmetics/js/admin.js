@@ -181,15 +181,22 @@ function bindProductSearch() {
     const q = input.value.toLowerCase().trim();
     renderProductsTable(window.allProducts.filter(p => {
       if (!q) return true;
+      // Получаем названия категорий по их ID
+      const catLabels = (p.categories || [p.category]).filter(Boolean)
+        .map(id => {
+          const cat = (window.allCategories || []).find(c => c.id === id);
+          return cat ? cat.label : id;
+        });
       return [
         p.name,
         p.sku,
-        p.category,
-        ...(p.categories || []),
         p.description,
         p.color,
         p.effect,
-        p.productType
+        p.productType,
+        ...(p.categories || []),
+        p.category,
+        ...catLabels
       ].some(v => (v || '').toLowerCase().includes(q));
     }));
   };
