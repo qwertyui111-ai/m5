@@ -194,12 +194,15 @@ document.getElementById('add-product-btn').addEventListener('click', () => {
   document.getElementById('pm-emoji').value       = '✦';
   document.getElementById('pm-badge').value       = '';
   document.getElementById('pm-active').checked    = true;
+  document.getElementById('pm-sku').value          = '';
+  renderGalleryList([]);
   document.getElementById('pm-color').value        = '';
   document.getElementById('pm-effect').value       = '';
   document.getElementById('pm-type').value         = '';
   document.getElementById('pm-ai-status').textContent = '';
   populateCategoryCheckboxes([]);
   bindAiTagsBtn();
+  document.getElementById('pm-add-photo-btn').onclick = () => addGalleryRow('');
   openModal('product-modal');
 });
 
@@ -214,11 +217,14 @@ window.openEditProduct = async (id) => {
   document.getElementById('pm-emoji').value       = p.emoji || '';
   document.getElementById('pm-badge').value       = p.badge || '';
   document.getElementById('pm-active').checked    = p.active !== false;
+  document.getElementById('pm-sku').value          = p.sku    || '';
+  renderGalleryList(p.gallery || []);
   document.getElementById('pm-color').value        = p.color  || '';
   document.getElementById('pm-effect').value       = p.effect || '';
   document.getElementById('pm-type').value         = p.productType || '';
   populateCategoryCheckboxes(Array.isArray(p.categories) ? p.categories : (p.category ? [p.category] : []));
   bindAiTagsBtn();
+  document.getElementById('pm-add-photo-btn').onclick = () => addGalleryRow('');
   openModal('product-modal');
 };
 
@@ -245,6 +251,8 @@ document.getElementById('save-product-btn').addEventListener('click', async () =
     emoji:       document.getElementById('pm-emoji').value || '✦',
     badge:       document.getElementById('pm-badge').value || null,
     active:      document.getElementById('pm-active').checked,
+    sku:         document.getElementById('pm-sku').value.trim(),
+    gallery:     getGalleryUrls(),
     color:       document.getElementById('pm-color').value.trim(),
     effect:      document.getElementById('pm-effect').value.trim(),
     productType: document.getElementById('pm-type').value.trim(),
@@ -437,6 +445,39 @@ document.querySelectorAll('.modal-overlay').forEach(overlay => {
 // ============================================================
 // UTILS
 // ============================================================
+
+
+// ============================================================
+// GALLERY
+// ============================================================
+
+function renderGalleryList(urls) {
+  const list = document.getElementById('pm-gallery-list');
+  if (!list) return;
+  list.innerHTML = '';
+  (urls || []).forEach((url, i) => addGalleryRow(url));
+}
+
+function addGalleryRow(url) {
+  const list = document.getElementById('pm-gallery-list');
+  if (!list) return;
+  const row = document.createElement('div');
+  row.style.cssText = 'display:flex;gap:8px;align-items:center';
+  row.innerHTML = `
+    <input type="text" value="${url || ''}" placeholder="https://...jpg"
+      style="flex:1;border:1px solid #E5D5C5;border-radius:6px;padding:8px 12px;font-size:13px;outline:none"
+      oninput="this.dataset.changed=1">
+    <button type="button" onclick="this.closest('div').remove()"
+      style="background:none;border:none;cursor:pointer;color:#C97B6A;font-size:18px;line-height:1;padding:4px">×</button>
+  `;
+  list.appendChild(row);
+}
+
+function getGalleryUrls() {
+  return [...document.querySelectorAll('#pm-gallery-list input')]
+    .map(i => i.value.trim())
+    .filter(Boolean);
+}
 
 // ============================================================
 // AI TAGS
