@@ -9,6 +9,16 @@ function renderNav(activePage) {
   const inPages = window.location.pathname.includes('/pages/');
   const root    = inPages ? '../' : './';
 
+  const cartIcon = activePage === 'cart' ? '' : `
+        <button class="nav__icon-btn nav__cart-btn" onclick="window.location.href='${root}pages/cart.html'" aria-label="Корзина">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+            <line x1="3" y1="6" x2="21" y2="6"/>
+            <path d="M16 10a4 4 0 01-8 0"/>
+          </svg>
+          <span class="nav__cart-count" aria-live="polite"></span>
+        </button>`;
+
   nav.innerHTML = `
     <div class="nav__inner">
       <nav class="nav__links" id="nav-links">
@@ -19,15 +29,7 @@ function renderNav(activePage) {
       <a href="${root}index.html" class="nav__logo">Masura</a>
 
       <div class="nav__actions">
-        <button class="nav__icon-btn nav__cart-btn" onclick="window.location.href='${root}pages/cart.html'" aria-label="Корзина">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
-            <line x1="3" y1="6" x2="21" y2="6"/>
-            <path d="M16 10a4 4 0 01-8 0"/>
-          </svg>
-          <span class="nav__cart-count" aria-live="polite"></span>
-        </button>
-
+        ${cartIcon}
         <button class="nav__hamburger" id="nav-hamburger" aria-label="Меню">
           <span></span><span></span><span></span>
         </button>
