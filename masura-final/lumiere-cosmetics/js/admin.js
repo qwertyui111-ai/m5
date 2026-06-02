@@ -208,7 +208,6 @@ document.getElementById('add-product-btn').addEventListener('click', () => {
   document.getElementById('pm-name').value        = '';
   document.getElementById('pm-description').value = '';
   document.getElementById('pm-price').value       = '';
-  document.getElementById('pm-emoji').value       = '✦';
   document.getElementById('pm-badge').value       = '';
   document.getElementById('pm-active').checked    = true;
   document.getElementById('pm-favorite').checked   = false;
@@ -232,7 +231,6 @@ window.openEditProduct = async (id) => {
   document.getElementById('pm-name').value        = p.name;
   document.getElementById('pm-description').value = p.description || '';
   document.getElementById('pm-price').value       = p.price;
-  document.getElementById('pm-emoji').value       = p.emoji || '';
   document.getElementById('pm-badge').value       = p.badge || '';
   document.getElementById('pm-active').checked    = p.active !== false;
   document.getElementById('pm-favorite').checked   = p.favorite === true;
@@ -267,7 +265,6 @@ document.getElementById('save-product-btn').addEventListener('click', async () =
     category:    getSelectedCategories()[0] || 'all',
     description: document.getElementById('pm-description').value.trim(),
     price,
-    emoji:       document.getElementById('pm-emoji').value || '✦',
     badge:       document.getElementById('pm-badge').value || null,
     active:      document.getElementById('pm-active').checked,
     favorite:    document.getElementById('pm-favorite').checked,
