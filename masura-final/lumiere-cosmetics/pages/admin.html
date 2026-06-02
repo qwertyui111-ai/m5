@@ -139,31 +139,62 @@
     <!-- SETTINGS -->
     <section class="admin-section" id="section-settings">
       <h1 class="admin-page-title">Настройки сайта</h1>
-      <p class="admin-page-sub">Тексты и содержимое главной страницы</p>
+      <p class="admin-page-sub">Управление содержимым главной страницы</p>
+
+      <!-- Навигация -->
       <div class="settings-card">
-        <h2 class="settings-card__title">Баннер (Hero)</h2>
-        <div class="form-group"><label>Надпись над заголовком</label><input type="text" id="s-eyebrow" placeholder="Новая коллекция 2025"></div>
-        <div class="form-group"><label>URL баннера 1 (левый)</label><input type="text" id="s-banner1" placeholder="https://...jpg"></div>
-        <div class="form-group"><label>URL баннера 2 (правый)</label><input type="text" id="s-banner2" placeholder="https://...jpg"></div>
-        <div class="form-group"><label>Главный заголовок</label><input type="text" id="s-title" placeholder="Красота — это ритуал"></div>
-        <div class="form-group"><label>Подзаголовок</label><textarea id="s-subtitle" rows="2"></textarea></div>
-        <div class="form-row">
-          <div class="form-group"><label>Текст кнопки CTA</label><input type="text" id="s-cta"></div>
-          <div class="form-group"><label>Тег бестселлера</label><input type="text" id="s-tag"></div>
+        <h2 class="settings-card__title">Навигация</h2>
+        <div class="form-group">
+          <label>Логотип — URL изображения (если пусто — показывается текст MASURA)</label>
+          <input type="text" id="s-logo-image" placeholder="https://...png">
         </div>
       </div>
+
+      <!-- Бегущая строка -->
       <div class="settings-card">
         <h2 class="settings-card__title">Бегущая строка</h2>
-        <div class="form-group"><label>Элементы (через запятую)</label><input type="text" id="s-marquee"></div>
+        <div class="form-group">
+          <label>Элементы (через запятую)</label>
+          <input type="text" id="s-marquee" placeholder="Профессиональная косметика, Японский маникюр, Cruelty-free">
+        </div>
       </div>
+
+      <!-- Баннеры -->
+      <div class="settings-card">
+        <h2 class="settings-card__title">Два баннера под навигацией</h2>
+        <div class="form-row">
+          <div class="form-group">
+            <label>URL баннера 1 (левый)</label>
+            <input type="text" id="s-banner1" placeholder="https://...jpg">
+          </div>
+          <div class="form-group">
+            <label>URL баннера 2 (правый)</label>
+            <input type="text" id="s-banner2" placeholder="https://...jpg">
+          </div>
+        </div>
+      </div>
+
+      <!-- Футер -->
       <div class="settings-card">
         <h2 class="settings-card__title">Футер</h2>
-        <div class="form-group"><label>О бренде</label><textarea id="s-footer-about" rows="3" placeholder="Описание компании..."></textarea></div>
-        <div class="form-row">
-          <div class="form-group"><label>Помощь</label><textarea id="s-footer-help" rows="4" placeholder="Доставка и оплата&#10;Возврат товара&#10;FAQ"></textarea></div>
-          <div class="form-group"><label>Информация</label><textarea id="s-footer-info" rows="4" placeholder="Политика конфиденциальности&#10;Реквизиты"></textarea></div>
+        <div class="form-group">
+          <label>О бренде</label>
+          <textarea id="s-footer-about" rows="3" placeholder="Описание компании..."></textarea>
         </div>
-        <div class="form-group"><label>Контакты</label><textarea id="s-footer-contacts" rows="3" placeholder="Email: info@masura.ru&#10;Телефон: +7..."></textarea></div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Помощь</label>
+            <textarea id="s-footer-help" rows="4" placeholder="Доставка и оплата&#10;Возврат товара&#10;FAQ"></textarea>
+          </div>
+          <div class="form-group">
+            <label>Информация</label>
+            <textarea id="s-footer-info" rows="4" placeholder="Политика конфиденциальности&#10;Реквизиты"></textarea>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Контакты</label>
+          <textarea id="s-footer-contacts" rows="3" placeholder="Email: info@masura.ru&#10;Телефон: +7..."></textarea>
+        </div>
       </div>
 
       <div style="display:flex;justify-content:flex-end">
