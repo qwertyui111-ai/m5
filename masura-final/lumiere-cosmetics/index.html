@@ -845,10 +845,12 @@ Instagram: @masura</p>
         filtered = filtered.filter(p => Array.isArray(p.categories) ? p.categories.includes(cat) : p.category === cat);
       }
       if (q) {
-        filtered = filtered.filter(p =>
-          [p.name, p.description, p.color, p.effect, p.productType]
-            .map(v => (v || '').toLowerCase()).some(f => f.includes(q))
-        );
+        filtered = filtered.filter(p => {
+          const catLabels = (p.categories || [p.category]).filter(Boolean)
+            .map(id => { const c = (window._allCategories || []).find(x => x.id === id); return c ? c.label : id; });
+          return [p.name, p.description, p.color, p.effect, p.productType, p.sku, ...catLabels]
+            .map(v => (v || '').toLowerCase()).some(f => f.includes(q));
+        });
       }
       renderProducts(filtered, window._allCategories, cat, true);
     };
