@@ -774,6 +774,10 @@ Instagram: @masura</p>
         getActiveProducts(), getCategories(), getSettings()
       ]);
 
+      // Marquee colors
+      if (settings?.marqueeBg)    document.querySelector('.marquee-bar').style.background = settings.marqueeBg;
+      if (settings?.marqueeColor) document.querySelector('.marquee-bar').style.color      = settings.marqueeColor;
+
       // Logo image
       if (settings?.logoImage) {
         const logoEl = document.querySelector('.site-nav__logo');
@@ -790,12 +794,16 @@ Instagram: @masura</p>
       }
 
       // Hero banners
-      if (settings?.heroBanner1) {
-        const b1 = document.getElementById('hero-banner-1');
+      const b1 = document.getElementById('hero-banner-1');
+      const b2 = document.getElementById('hero-banner-2');
+      if (settings?.heroBanner1Enabled === false) {
+        b1.style.display = 'none';
+      } else if (settings?.heroBanner1) {
         b1.innerHTML = `<img src="${settings.heroBanner1}" alt="Banner 1" style="width:100%;height:100%;object-fit:cover">`;
       }
-      if (settings?.heroBanner2) {
-        const b2 = document.getElementById('hero-banner-2');
+      if (settings?.heroBanner2Enabled === false) {
+        b2.style.display = 'none';
+      } else if (settings?.heroBanner2) {
         b2.innerHTML = `<img src="${settings.heroBanner2}" alt="Banner 2" style="width:100%;height:100%;object-fit:cover">`;
       }
 
