@@ -4,95 +4,70 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Masura — Каталог</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/variables.css">
-  <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/nav.css">
   <link rel="stylesheet" href="css/catalog.css">
 </head>
-<body>
+<body style="background:var(--color-white);color:var(--color-text)">
 
   <header id="site-nav" class="nav" role="banner"></header>
 
   <main>
     <div class="container">
-      <div class="page-header">
-        <p class="page-header__eyebrow">Наш ассортимент</p>
-        <h1 class="page-header__title">Каталог</h1>
-        <p class="page-header__subtitle">Откройте для себя косметику, созданную для настоящих ритуалов красоты</p>
+      <div class="catalog-header">
+        <h1 class="catalog-header__title">Каталог</h1>
       </div>
 
-      <div style="margin-bottom:16px">
-        <input type="search" id="catalog-search" placeholder="Поиск по названию, цвету, эффекту..."
-          style="width:100%;padding:12px 18px;border:1.5px solid var(--color-border);border-radius:var(--radius-pill);font-family:var(--font-body);font-size:14px;background:var(--color-white);color:var(--color-espresso);outline:none;transition:border-color 0.2s"
-          oninput="filterProducts()">
+      <div class="catalog-filters-wrap" id="catalog-filters">
+        <div class="loading" style="padding:12px 0"><div class="spinner"></div></div>
       </div>
 
-      <div class="catalog-filters" id="catalog-filters" role="group" aria-label="Фильтр по категории">
-        <div class="loading" style="padding:8px 0"><div class="spinner" style="width:16px;height:16px;border-width:1.5px"></div></div>
+      <div class="catalog-search-wrap">
+        <input type="search" id="catalog-search" placeholder="Поиск по названию, цвету, эффекту..." oninput="filterProducts()">
       </div>
 
-      <div class="product-grid" id="product-grid" aria-label="Товары">
-        <div class="loading" style="grid-column:1/-1"><div class="spinner"></div> Загрузка товаров...</div>
+      <div class="product-grid" id="product-grid">
+        <div class="loading" style="grid-column:1/-1;padding:80px 0"><div class="spinner"></div></div>
       </div>
     </div>
   </main>
 
-  <footer role="contentinfo">
-    <div class="container">
-      <div class="footer__bottom" style="border:none;padding:var(--spacing-xl) 0">
-        <span style="color:rgba(0,0,0,0.4)">© 2025 Masura</span>
+  <!-- Product Modal -->
+  <div id="product-modal" class="product-modal-overlay" onclick="if(event.target===this)closeModal()">
+    <div class="product-modal">
+      <div class="product-modal__image-wrap" id="modal-image-wrap">
+        <img id="modal-image" src="" alt="" class="product-modal__image" style="display:none">
+        <div id="modal-placeholder" class="product-modal__placeholder"></div>
       </div>
-    </div>
-  </footer>
-
-  <!-- Модальное окно товара -->
-  <div id="product-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1000;align-items:center;justify-content:center;padding:16px" onclick="if(event.target===this)this.style.display='none'">
-    <div style="background:#fff;border-radius:16px;max-width:480px;width:100%;max-height:90vh;overflow-y:auto">
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:20px 24px 16px;border-bottom:1px solid #E8E2DC">
-        <h2 id="modal-name" style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:400;margin:0"></h2>
-        <button onclick="document.getElementById('product-modal').style.display='none'" style="background:none;border:none;font-size:28px;cursor:pointer;color:#888;line-height:1;padding:0 4px">×</button>
-      </div>
-      <div style="padding:20px 24px">
-        <img id="modal-image" src="" alt="" style="width:100%;border-radius:12px;margin-bottom:16px;display:none;object-fit:cover;aspect-ratio:1">
-        <div id="modal-placeholder" style="width:100%;aspect-ratio:1;border-radius:12px;background:#F2EEE9;display:flex;align-items:center;justify-content:center;font-size:64px;margin-bottom:16px"></div>
-        <p id="modal-desc" style="font-size:14px;color:#666;line-height:1.7;margin-bottom:16px"></p>
-        <div style="display:flex;align-items:center;justify-content:space-between">
-          <span id="modal-price" style="font-family:'Cormorant Garamond',serif;font-size:28px"></span>
-          <button id="modal-add-btn" onclick="modalAddToCart()" style="background:#1A1A1A;color:#fff;border:none;border-radius:99px;padding:12px 24px;font-size:13px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer">В корзину</button>
-        </div>
+      <div class="product-modal__content">
+        <button class="product-modal__close" onclick="closeModal()">×</button>
+        <h2 id="modal-name" class="product-modal__name"></h2>
+        <div id="modal-price" class="product-modal__price"></div>
+        <p id="modal-desc" class="product-modal__desc"></p>
+        <button id="modal-add-btn" class="product-modal__add-btn" onclick="modalAddToCart()">В корзину</button>
       </div>
     </div>
   </div>
 
   <script src="js/nav.js"></script>
   <script src="js/cart.js"></script>
-  <script src="js/firebase-config.js"></script>
 
-  <script type="module">
-    import { getActiveProducts, getCategories } from 'js/db.js';
-
-    renderNav('catalog');
-
+  <script>
     var currentModalProduct = null;
 
-    window.modalAddToCart = function() {
-      if (!currentModalProduct) return;
-      Cart.add(currentModalProduct);
-      var btn = document.getElementById('modal-add-btn');
-      btn.textContent = '✓ Добавлено';
-      btn.style.background = '#D4847A';
-      setTimeout(function() {
-        btn.textContent = 'В корзину';
-        btn.style.background = '#1A1A1A';
-      }, 1500);
-    };
+    function closeModal() {
+      document.getElementById('product-modal').classList.remove('open');
+    }
 
-    window.openProductModal = function(id) {
-      var p = (window._allProducts || []).find(function(x) { return x.id === id; });
+    function openProductModal(id) {
+      var p = (window._allProducts || []).find(function(x){ return x.id === id; });
       if (!p) return;
       currentModalProduct = p;
       document.getElementById('modal-name').textContent = p.name || '';
-      document.getElementById('modal-desc').textContent = p.description || 'Описание отсутствует';
+      document.getElementById('modal-desc').textContent = p.description || '';
       document.getElementById('modal-price').textContent = Number(p.price).toLocaleString('ru-RU') + ' ₽';
       var img = document.getElementById('modal-image');
       var ph  = document.getElementById('modal-placeholder');
@@ -102,22 +77,41 @@
         img.style.display = 'none'; ph.style.display = 'flex';
         ph.textContent = p.emoji || '✦';
       }
-      document.getElementById('product-modal').style.display = 'flex';
-    };
+      var btn = document.getElementById('modal-add-btn');
+      btn.textContent = 'В корзину';
+      btn.style.background = '';
+      document.getElementById('product-modal').classList.add('open');
+    }
 
-    window.addToCartFromCard = function(id, event) {
+    function modalAddToCart() {
+      if (!currentModalProduct) return;
+      Cart.add(currentModalProduct);
+      var btn = document.getElementById('modal-add-btn');
+      btn.textContent = '✓ Добавлено';
+      btn.style.background = '#555';
+    }
+
+    function addToCartFromCard(id, event) {
       event.stopPropagation();
-      var p = (window._allProducts || []).find(function(x) { return x.id === id; });
+      var p = (window._allProducts || []).find(function(x){ return x.id === id; });
       if (!p) return;
       Cart.add(p);
       var btn = event.currentTarget;
-      btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>';
-      btn.style.background = '#D4847A';
+      btn.textContent = '✓';
+      btn.style.background = '#111';
+      btn.style.color = '#fff';
       setTimeout(function() {
-        btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>';
+        btn.textContent = 'В корзину';
         btn.style.background = '';
+        btn.style.color = '';
       }, 1500);
-    };
+    }
+  </script>
+
+  <script type="module">
+    import { getActiveProducts, getCategories } from 'js/db.js';
+
+    renderNav('catalog');
 
     async function init() {
       const [products, categories] = await Promise.all([getActiveProducts(), getCategories()]);
@@ -146,9 +140,8 @@
     }
 
     window.filterProducts = function() {
-      const q = document.getElementById('catalog-search')?.value.toLowerCase().trim() || '';
-      const activeBtn = document.querySelector('.filter-btn.active');
-      const cat = activeBtn?.dataset.category || 'all';
+      const q = (document.getElementById('catalog-search')?.value || '').toLowerCase().trim();
+      const cat = document.querySelector('.filter-btn.active')?.dataset.category || 'all';
       let filtered = window._allProducts || [];
       if (cat !== 'all') {
         filtered = filtered.filter(p => Array.isArray(p.categories) ? p.categories.includes(cat) : p.category === cat);
@@ -156,8 +149,7 @@
       if (q) {
         filtered = filtered.filter(p =>
           [p.name, p.description, p.color, p.effect, p.productType]
-            .map(v => (v || '').toLowerCase())
-            .some(f => f.includes(q))
+            .map(v => (v || '').toLowerCase()).some(f => f.includes(q))
         );
       }
       renderProducts(filtered, window._allCategories, cat, true);
@@ -173,24 +165,21 @@
         grid.innerHTML = '<p class="catalog-empty">Товары не найдены</p>';
         return;
       }
-      const getCatLabel = id => (categories || []).find(c => c.id === id)?.label || id;
+      const getCatLabel = id => (categories || []).find(c => c.id === id)?.label || '';
       grid.innerHTML = products.map(p => `
-        <article class="product-card animate-fade-up" style="cursor:pointer" onclick="openProductModal('${p.id}')">
+        <article class="product-card" onclick="openProductModal('${p.id}')">
           ${p.badge ? `<span class="product-card__badge ${p.badge === 'New' ? 'product-card__badge--new' : ''}">${p.badge}</span>` : ''}
           <div class="product-card__image-wrap">
-            ${p.image ? `<img class="product-card__image" src="${p.image}" alt="${p.name}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">` : ''}
-            <div class="product-card__image-placeholder" aria-hidden="true" style="${p.image ? 'display:none' : ''}">${p.emoji || '✦'}</div>
+            ${p.image ? `<img class="product-card__image" src="${p.image}" alt="${p.name}" loading="lazy">` : ''}
+            <div class="product-card__image-placeholder" style="${p.image ? 'display:none' : ''}">${p.emoji || ''}</div>
+            <div class="product-card__overlay">
+              <button class="product-card__quick-add" onclick="addToCartFromCard('${p.id}', event)">В корзину</button>
+            </div>
           </div>
           <div class="product-card__info">
             <p class="product-card__category">${getCatLabel(p.category)}</p>
             <h3 class="product-card__name">${p.name}</h3>
-            <p class="product-card__desc">${p.description || ''}</p>
-            <div class="product-card__footer">
-              <div class="product-card__price">${Number(p.price).toLocaleString('ru-RU')} ₽</div>
-              <button class="product-card__add-btn" onclick="addToCartFromCard('${p.id}', event)" aria-label="Добавить в корзину">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-              </button>
-            </div>
+            <div class="product-card__price">${Number(p.price).toLocaleString('ru-RU')} ₽</div>
           </div>
         </article>
       `).join('');
