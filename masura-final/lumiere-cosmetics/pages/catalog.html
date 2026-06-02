@@ -178,17 +178,7 @@
         });
       });
 
-      // Click on card — show description modal
-      grid.querySelectorAll('.product-card').forEach(card => {
-        card.style.cursor = 'pointer';
-        card.addEventListener('click', (e) => {
-          if (e.target.closest('.product-card__add-btn')) return;
-          const id = card.querySelector('.product-card__add-btn')?.dataset.id;
-          const product = (window._allProducts || []).find(p => p.id === id);
-          if (!product) return;
-          showProductModal(product);
-        });
-      });
+
     }
 
     init();
@@ -198,6 +188,19 @@
 
 
 
+  
+  <script>
+  // Делегирование клика на карточку товара
+  document.addEventListener('click', function(e) {
+    const card = e.target.closest('.product-card');
+    if (!card) return;
+    if (e.target.closest('.product-card__add-btn')) return;
+    const id = card.querySelector('.product-card__add-btn')?.dataset.id;
+    const product = (window._allProducts || []).find(p => p.id === id);
+    if (!product) return;
+    showProductModal(product);
+  });
+  </script>
   <!-- Product Modal -->
   <div id="product-modal-view" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1000;align-items:center;justify-content:center;padding:16px">
     <div style="background:#fff;border-radius:16px;max-width:480px;width:100%;max-height:90vh;overflow-y:auto">
