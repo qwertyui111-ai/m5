@@ -132,12 +132,12 @@ async function loadDashboard() {
 // PRODUCTS
 // ============================================================
 
-let allProducts = [];
-let allCategories = [];
+window.allProducts = [];
+window.allCategories = [];
 
 async function loadProducts() {
-  [allProducts, allCategories] = await Promise.all([getProducts(), getCategories()]);
-  renderProductsTable(allProducts);
+  [window.allProducts, window.allCategories] = await Promise.all([getProducts(), getCategories()]);
+  renderProductsTable(window.allProducts);
   bindProductSearch();
 }
 
@@ -179,7 +179,7 @@ function bindProductSearch() {
   const input = document.getElementById('product-search');
   input.oninput = () => {
     const q = input.value.toLowerCase().trim();
-    renderProductsTable(allProducts.filter(p => {
+    renderProductsTable(window.allProducts.filter(p => {
       if (!q) return true;
       return [
         p.name,
