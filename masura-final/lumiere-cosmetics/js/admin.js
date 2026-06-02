@@ -211,6 +211,7 @@ document.getElementById('add-product-btn').addEventListener('click', () => {
   document.getElementById('pm-emoji').value       = '✦';
   document.getElementById('pm-badge').value       = '';
   document.getElementById('pm-active').checked    = true;
+  document.getElementById('pm-favorite').checked   = false;
   document.getElementById('pm-sku').value          = '';
   renderGalleryList([]);
   document.getElementById('pm-color').value        = '';
@@ -234,6 +235,7 @@ window.openEditProduct = async (id) => {
   document.getElementById('pm-emoji').value       = p.emoji || '';
   document.getElementById('pm-badge').value       = p.badge || '';
   document.getElementById('pm-active').checked    = p.active !== false;
+  document.getElementById('pm-favorite').checked   = p.favorite === true;
   document.getElementById('pm-sku').value          = p.sku    || '';
   renderGalleryList(p.gallery || []);
   document.getElementById('pm-color').value        = p.color  || '';
@@ -268,6 +270,7 @@ document.getElementById('save-product-btn').addEventListener('click', async () =
     emoji:       document.getElementById('pm-emoji').value || '✦',
     badge:       document.getElementById('pm-badge').value || null,
     active:      document.getElementById('pm-active').checked,
+    favorite:    document.getElementById('pm-favorite').checked,
     sku:         document.getElementById('pm-sku').value.trim(),
     gallery:     getGalleryUrls(),
     color:       document.getElementById('pm-color').value.trim(),
