@@ -88,9 +88,9 @@ import {
   doc, setDoc, getDoc, serverTimestamp
 } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
-// Redirect if already logged in
+// Redirect if already logged in (only verified users)
 onAuthStateChanged(auth, function(user) {
-  if (user) window.location.href = 'profile.html';
+  if (user && user.emailVerified) window.location.href = 'profile.html';
 });
 
 async function createUserDoc(user, name) {
