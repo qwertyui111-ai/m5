@@ -419,6 +419,7 @@ window.changeOrderStatus = async (id, status) => {
 async function loadSettings() {
   const s = await getSettings();
   document.getElementById('s-logo-image').value      = s.logoImage      || '';
+  document.getElementById('s-marquee-enabled').checked = s.marqueeEnabled !== false;
   document.getElementById('s-marquee').value          = (s.marqueeItems || []).join(', ');
   document.getElementById('s-marquee-bg').value      = s.marqueeBg    || '#111111';
   document.getElementById('s-marquee-color').value   = s.marqueeColor || '#ffffff';
@@ -436,6 +437,7 @@ document.getElementById('save-settings-btn').addEventListener('click', async () 
   const marqueeRaw = document.getElementById('s-marquee').value;
   await saveSettings({
     logoImage:    document.getElementById('s-logo-image').value.trim(),
+    marqueeEnabled: document.getElementById('s-marquee-enabled').checked,
     marqueeItems: marqueeRaw.split(',').map(s => s.trim()).filter(Boolean),
     marqueeBg:    document.getElementById('s-marquee-bg').value,
     marqueeColor: document.getElementById('s-marquee-color').value,
