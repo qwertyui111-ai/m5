@@ -787,9 +787,16 @@ Instagram: @masura</p>
         getActiveProducts(), getCategories(), getSettings()
       ]);
 
-      // Marquee colors
-      if (settings?.marqueeBg)    document.querySelector('.marquee-bar').style.background = settings.marqueeBg;
-      if (settings?.marqueeColor) document.querySelector('.marquee-bar').style.color      = settings.marqueeColor;
+      // Marquee
+      const marqueeBar = document.querySelector('.marquee-bar');
+      if (marqueeBar) {
+        if (settings?.marqueeEnabled === false) {
+          marqueeBar.style.display = 'none';
+        } else {
+          if (settings?.marqueeBg)    marqueeBar.style.background = settings.marqueeBg;
+          if (settings?.marqueeColor) marqueeBar.style.color      = settings.marqueeColor;
+        }
+      }
 
       // Logo image
       if (settings?.logoImage) {
