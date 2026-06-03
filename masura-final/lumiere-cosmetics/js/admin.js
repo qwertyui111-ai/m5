@@ -662,7 +662,8 @@ async function loadUsers() {
   try {
     const { collection, getDocs, orderBy, query } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
     const _db = window._db;
-    const snap = await getDocs(query(collection(_db, 'users'), orderBy('createdAt', 'desc'))).catch(() => getDocs(collection(_db, 'users')));
+    if (!_db) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#999;padding:20px">База данных не готова, попробуйте ещё раз</td></tr>'; return; }
+    const snap = await getDocs(collection(_db, 'users'));
     if (snap.empty) {
       tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#999;padding:40px">Пользователей пока нет</td></tr>';
       return;
