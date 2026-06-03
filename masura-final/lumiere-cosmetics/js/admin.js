@@ -1,4 +1,3 @@
-// v2
 /**
  * LUMIÈRE — Admin Panel Logic
  */
@@ -25,8 +24,20 @@ import { initOzonImport } from './ozon-import.js';
 // AUTH
 // ============================================================
 
-onAuthStateChanged(auth, user => {
+onAuthStateChanged(auth, async user => {
   if (user) {
+    // Check admin role
+    try {
+      const { doc, getDoc } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
+      const snap = await getDoc(doc(window._db, 'users', user.uid));
+      if (!snap.exists() || snap.data().role !== 'admin') {
+        await signOut(auth);
+        showError('Нет доступа. Только администраторы могут войти.');
+        return;
+      }
+    } catch(e) {
+      console.warn('Role check error:', e);
+    }
     document.getElementById('login-screen').style.display  = 'none';
     document.getElementById('admin-app').style.display     = 'grid';
     document.getElementById('admin-email-display').textContent = user.email;
