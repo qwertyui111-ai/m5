@@ -110,11 +110,25 @@
 
   <script type="module">
     import { getActiveProducts, getCategories } from '../js/db.js';
+    import { Cache } from '../js/cache.js';
 
     renderNav('catalog');
 
     async function init() {
-      const [products, categories] = await Promise.all([getActiveProducts(), getCategories()]);
+      let products   = Cache.get('products');
+      let categories = Cache.get('categories');
+
+      if (!products || !categories) {
+        const toFetch = await Promise.all([
+          products   ? Promise.resolve(products)   : getActiveProducts(),
+          categories ? Promise.resolve(categories) : getCategories()
+        ]);
+        products   = toFetch[0];
+        categories = toFetch[1];
+        Cache.set('products', products);
+        Cache.set('categories', categories);
+      }
+
       renderFilters(categories);
       renderProducts(products, categories, 'all');
     }
