@@ -3,6 +3,7 @@
  */
 
 import { auth, db } from './firebase-config.js';
+window._db = db;
 import {
   signInWithEmailAndPassword,
   signOut,
@@ -658,11 +659,8 @@ async function loadUsers() {
   if (!tbody) return;
   try {
     const { collection, getDocs, orderBy, query } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
-    const snap = await getDocs(query(collection(db, 'users'), orderBy('createdAt', 'desc'))).catch(async () => {
-      // fallback without orderBy if no index
-      const { getDocs: gd, collection: col } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
-      return gd(col(db, 'users'));
-    });
+    const _db = window._db;
+    const snap = await getDocs(query(collection(_db, 'users'), orderBy('createdAt', 'desc'))).catch(() => getDocs(collection(_db, 'users')));
     if (snap.empty) {
       tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#999;padding:40px">Пользователей пока нет</td></tr>';
       return;
@@ -690,7 +688,7 @@ async function loadUsers() {
 window.saveUserDiscount = async function(uid, discount) {
   try {
     const { doc, updateDoc } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
-    await updateDoc(doc(db, 'users', uid), { discount: Number(discount) });
+    await updateDoc(doc(window._db, 'users', uid), { discount: Number(discount) });
     showToast('Скидка сохранена');
   } catch(e) {
     showToast('Ошибка: ' + e.message);
@@ -706,7 +704,8 @@ async function loadPromocodes() {
   if (!tbody) return;
   try {
     const { collection, getDocs } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
-    const snap = await getDocs(collection(db, 'promocodes'));
+    const _db = window._db;
+    const snap = await getDocs(collection(_db, 'promocodes'));
     if (snap.empty) {
       tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#999;padding:40px">Промокодов пока нет</td></tr>';
       return;
@@ -747,7 +746,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const discount = prompt('Скидка в %:');
     if (!discount || isNaN(discount)) return;
     const { doc, setDoc } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
-    await setDoc(doc(db, 'promocodes', code), { discount: Number(discount), active: true });
+    await setDoc(doc(window._db, 'promocodes', code), { discount: Number(discount), active: true });
     showToast(`Промокод ${code} создан`);
     loadPromocodes();
   });
