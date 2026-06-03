@@ -108,7 +108,7 @@
     } catch(e) { console.warn('User data error:', e); }
 
     try {
-      const q = query(collection(db, 'orders'), where('userId', '==', user.uid), orderBy('createdAt', 'desc'));
+      const q = query(collection(db, 'orders'), where('userId', '==', user.uid));
       const snap = await getDocs(q);
       const list = document.getElementById('orders-list');
       if (snap.empty) {
@@ -122,7 +122,10 @@
           return '<div class="order-item"><div><div class="order-item__num">Заказ #' + d.id.slice(-6).toUpperCase() + '</div><div class="order-item__date">' + date + '</div></div><div class="order-item__total">' + Number(o.total||0).toLocaleString('ru-RU') + ' ₽</div><span class="order-item__status ' + statusClass + '">' + statusText + '</span></div>';
         }).join('');
       }
-    } catch(e) { console.warn('Orders error:', e); }
+    } catch(e) {
+      console.warn('Orders error:', e);
+      document.getElementById('orders-list').innerHTML = '<div class="empty-state">Заказов пока нет</div>';
+    }
   });
 
   window.logoutUser = async function() {
