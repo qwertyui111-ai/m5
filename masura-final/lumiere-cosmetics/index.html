@@ -421,18 +421,7 @@
       cursor: pointer;
       white-space: nowrap;
     }
-    .cookie-decline-btn {
-      background: none;
-      color: rgba(255,255,255,0.6);
-      border: 1px solid rgba(255,255,255,0.3);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 11px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      padding: 10px 20px;
-      cursor: pointer;
-      white-space: nowrap;
-    }
+
     @media (max-width: 600px) {
       .cookie-banner { flex-direction: column; align-items: flex-start; padding: 16px; }
     }
@@ -700,16 +689,11 @@
     <p>Мы используем файлы cookie для улучшения работы сайта. Продолжая использование сайта, вы соглашаетесь с нашей <a href="pages/legal.html?tab=cookies">политикой использования cookies</a>.</p>
     <div class="cookie-banner__btns">
       <button class="cookie-accept-btn" onclick="acceptCookies()">Принять</button>
-      <button class="cookie-decline-btn" onclick="declineCookies()">Отклонить</button>
     </div>
   </div>
   <script>
     function acceptCookies() {
       localStorage.setItem('cookie_consent', 'accepted');
-      document.getElementById('cookie-banner').style.display = 'none';
-    }
-    function declineCookies() {
-      localStorage.setItem('cookie_consent', 'declined');
       document.getElementById('cookie-banner').style.display = 'none';
     }
     if (!localStorage.getItem('cookie_consent')) {
@@ -752,7 +736,7 @@ Instagram: @masura</p>
         </div>
       </div>
       <div class="site-footer__bottom">
-        <span>© 2025 Masura. Все права защищены.</span>
+        <span>© 2026 Masura. Все права защищены.</span>
         <span>Профессиональная косметика</span>
       </div>
     </div>
