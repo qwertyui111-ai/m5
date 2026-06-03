@@ -589,7 +589,7 @@
       <a href="index.html" class="site-nav__logo">Masura</a>
       <div class="site-nav__right">
         <a href="pages/auth.html" id="nav-profile-btn" class="site-nav__cart" aria-label="Профиль" style="margin-right:4px">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.5" id="profile-icon-svg">
             <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
             <circle cx="12" cy="7" r="4"/>
           </svg>
@@ -912,11 +912,15 @@ Instagram: @masura</p>
 
     onAuthStateChanged(auth, user => {
       const btn = document.getElementById('nav-profile-btn');
+      const svg = document.getElementById('profile-icon-svg');
       if (!btn) return;
       if (user) {
         btn.href = 'pages/profile.html';
         btn.title = user.displayName || user.email;
-        btn.querySelector('svg').style.stroke = '#111';
+        if (svg) { svg.style.stroke = '#111'; svg.style.fill = '#111'; }
+      } else {
+        btn.href = 'pages/auth.html';
+        if (svg) { svg.style.stroke = '#111'; svg.style.fill = 'none'; }
       }
     });
   </script>
