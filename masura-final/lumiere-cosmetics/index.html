@@ -782,10 +782,37 @@ Instagram: @masura</p>
   <script type="module">
     import { getActiveProducts, getCategories, getSettings } from './js/db.js';
 
+    const CACHE_TTL = 60 * 60 * 1000; // 1 час
+
+    function getCache(key) {
+      try {
+        const raw = localStorage.getItem(key);
+        if (!raw) return null;
+        const { data, ts } = JSON.parse(raw);
+        if (Date.now() - ts > CACHE_TTL) { localStorage.removeItem(key); return null; }
+        return data;
+      } catch(e) { return null; }
+    }
+
+    function setCache(key, data) {
+      try { localStorage.setItem(key, JSON.stringify({ data, ts: Date.now() })); } catch(e) {}
+    }
+
     async function init() {
-      const [products, categories, settings] = await Promise.all([
-        getActiveProducts(), getCategories(), getSettings()
-      ]);
+      let products  = getCache('masura_products');
+      let categories = getCache('masura_categories');
+      let settings  = getCache('masura_settings');
+
+      const toLoad = [];
+      if (!products)   toLoad.push(getActiveProducts());  else toLoad.push(Promise.resolve(products));
+      if (!categories) toLoad.push(getCategories());       else toLoad.push(Promise.resolve(categories));
+      if (!settings)   toLoad.push(getSettings());         else toLoad.push(Promise.resolve(settings));
+
+      [products, categories, settings] = await Promise.all(toLoad);
+
+      if (!getCache('masura_products'))   setCache('masura_products',   products);
+      if (!getCache('masura_categories')) setCache('masura_categories', categories);
+      if (!getCache('masura_settings'))   setCache('masura_settings',   settings);
 
       // Marquee
       const marqueeBar = document.querySelector('.marquee-bar');
