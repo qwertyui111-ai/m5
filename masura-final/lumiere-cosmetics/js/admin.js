@@ -763,3 +763,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 });
+
+// Explicitly expose to global scope
+window.loadUsers = loadUsers;
+window.loadPromocodes = loadPromocodes;
