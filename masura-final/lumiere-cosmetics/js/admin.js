@@ -2,7 +2,7 @@
  * LUMIÈRE — Admin Panel Logic
  */
 
-import { auth } from './firebase-config.js';
+import { auth, db } from './firebase-config.js';
 import {
   signInWithEmailAndPassword,
   signOut,
@@ -658,7 +658,11 @@ async function loadUsers() {
   if (!tbody) return;
   try {
     const { collection, getDocs, orderBy, query } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
-    const snap = await getDocs(query(collection(db, 'users'), orderBy('createdAt', 'desc')));
+    const snap = await getDocs(query(collection(db, 'users'), orderBy('createdAt', 'desc'))).catch(async () => {
+      // fallback without orderBy if no index
+      const { getDocs: gd, collection: col } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
+      return gd(col(db, 'users'));
+    });
     if (snap.empty) {
       tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#999;padding:40px">Пользователей пока нет</td></tr>';
       return;
