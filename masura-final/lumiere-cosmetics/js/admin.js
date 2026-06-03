@@ -300,6 +300,7 @@ document.getElementById('save-product-btn').addEventListener('click', async () =
   if (id) {
     await updateProduct(id, data);
     toast('Товар обновлён ✓');
+    ['masura_cache_products','masura_cache_categories','masura_cache_settings'].forEach(k => localStorage.removeItem(k));
   } else {
     await addProduct(data);
     toast('Товар добавлен ✓');
@@ -379,6 +380,7 @@ document.getElementById('save-category-btn').addEventListener('click', async () 
   if (existingId) {
     await updateCategory(existingId, { label, order });
     toast('Категория обновлена ✓');
+    ['masura_cache_products','masura_cache_categories'].forEach(k => localStorage.removeItem(k));
   } else {
     await addCategory({ id: slug, label, order });
     toast('Категория добавлена ✓');
@@ -472,6 +474,7 @@ document.getElementById('save-settings-btn').addEventListener('click', async () 
     footerContacts: document.getElementById('s-footer-contacts').value.trim(),
   });
   toast('Настройки сохранены ✓');
+    localStorage.removeItem('masura_cache_settings');
 });
 
 // ============================================================
