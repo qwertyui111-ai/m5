@@ -656,7 +656,7 @@ function initMobileMenu() {
 // USERS
 // ============================================================
 
-async function loadUsers() {
+window.loadUsers = async function loadUsers() {
   const tbody = document.getElementById('users-table-body');
   if (!tbody) return;
   try {
@@ -702,7 +702,7 @@ window.saveUserDiscount = async function(uid, discount) {
 // PROMOCODES
 // ============================================================
 
-async function loadPromocodes() {
+window.loadPromocodes = async function loadPromocodes() {
   const tbody = document.getElementById('promo-table-body');
   if (!tbody) return;
   try {
