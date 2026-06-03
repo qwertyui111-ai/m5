@@ -26,13 +26,9 @@
     .auth-field input:focus { border-color: #111; }
     .auth-btn { width: 100%; background: #111; color: #fff; border: none; font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; padding: 16px; cursor: pointer; margin-top: 8px; transition: background 0.15s; }
     .auth-btn:hover { background: #333; }
-    .auth-divider { text-align: center; font-size: 11px; color: #ccc; margin: 20px 0; position: relative; }
-    .auth-divider::before, .auth-divider::after { content: ''; position: absolute; top: 50%; width: 42%; height: 1px; background: #e8e8e8; }
-    .auth-divider::before { left: 0; }
-    .auth-divider::after { right: 0; }
-
-    .auth-error { font-size: 12px; color: #c00; margin-top: 12px; text-align: center; min-height: 18px; }
-    .auth-back { display: block; text-align: center; margin-top: 24px; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #aaa; text-decoration: none; transition: color 0.15s; }
+    .auth-error { font-size: 12px; margin-top: 12px; text-align: center; min-height: 18px; color: #c00; }
+    .auth-link-btn { background: none; border: none; font-family: 'DM Sans', sans-serif; font-size: 12px; color: #aaa; cursor: pointer; text-decoration: underline; letter-spacing: 0.05em; display: block; margin: 12px auto 0; }
+    .auth-back { display: block; text-align: center; margin-top: 24px; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #aaa; text-decoration: none; }
     .auth-back:hover { color: #111; }
   </style>
 </head>
@@ -44,25 +40,23 @@
     <p class="auth-subtitle">Личный кабинет</p>
 
     <div class="auth-tabs">
-      <button class="auth-tab active" onclick="switchTab('login')">Вход</button>
-      <button class="auth-tab" onclick="switchTab('register')">Регистрация</button>
+      <button class="auth-tab active" id="tab-login" onclick="switchTab('login')">Вход</button>
+      <button class="auth-tab" id="tab-register" onclick="switchTab('register')">Регистрация</button>
     </div>
 
     <div class="auth-form active" id="form-login">
       <div class="auth-field"><label>Email</label><input type="email" id="login-email" placeholder="your@email.com" autocomplete="email"></div>
       <div class="auth-field"><label>Пароль</label><input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password"></div>
-      <button class="auth-btn" onclick="loginWithEmail()">Войти</button>
-      <p style="text-align:center;margin-top:12px"><button onclick="resetPassword()" style="background:none;border:none;font-family:'DM Sans',sans-serif;font-size:12px;color:#aaa;cursor:pointer;text-decoration:underline;letter-spacing:0.05em">Забыли пароль?</button></p>
-
+      <button class="auth-btn" id="btn-login">Войти</button>
+      <button class="auth-link-btn" id="btn-reset">Забыли пароль?</button>
       <p class="auth-error" id="login-error"></p>
     </div>
 
     <div class="auth-form" id="form-register">
-      <div class="auth-field"><label>Имя</label><input type="text" id="reg-name" placeholder="Ваше имя"></div>
+      <div class="auth-field"><label>Имя</label><input type="text" id="reg-name" placeholder="Ваше имя" autocomplete="name"></div>
       <div class="auth-field"><label>Email</label><input type="email" id="reg-email" placeholder="your@email.com" autocomplete="email"></div>
-      <div class="auth-field"><label>Пароль</label><input type="password" id="reg-password" placeholder="Минимум 6 символов" autocomplete="new-password"></div>
-      <button class="auth-btn" onclick="registerWithEmail()">Создать аккаунт</button>
-
+      <div class="auth-field"><label>Пароль (минимум 6 символов)</label><input type="password" id="reg-password" placeholder="••••••••" autocomplete="new-password"></div>
+      <button class="auth-btn" id="btn-register">Создать аккаунт</button>
       <p class="auth-error" id="reg-error"></p>
     </div>
 
@@ -71,83 +65,93 @@
 </div>
 
 <script>
-  function switchTab(tab) {
-    document.querySelectorAll('.auth-tab').forEach(function(t, i) {
-      t.classList.toggle('active', (tab==='login'&&i===0)||(tab==='register'&&i===1));
-    });
-    document.getElementById('form-login').classList.toggle('active', tab === 'login');
-    document.getElementById('form-register').classList.toggle('active', tab === 'register');
-  }
+function switchTab(tab) {
+  document.getElementById('tab-login').classList.toggle('active', tab === 'login');
+  document.getElementById('tab-register').classList.toggle('active', tab === 'register');
+  document.getElementById('form-login').classList.toggle('active', tab === 'login');
+  document.getElementById('form-register').classList.toggle('active', tab === 'register');
+}
 </script>
 
 <script type="module">
-  import { auth, db } from '../js/firebase-config.js';
-  import { signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, updateProfile } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
-  import { doc, setDoc, getDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+import { auth, db } from '../js/firebase-config.js';
+import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  sendPasswordResetEmail,
+  onAuthStateChanged,
+  updateProfile
+} from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import {
+  doc, setDoc, getDoc, serverTimestamp
+} from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
-  onAuthStateChanged(auth, function(user) {
-    if (user) window.location.href = 'profile.html';
-  });
+// Redirect if already logged in
+onAuthStateChanged(auth, function(user) {
+  if (user) window.location.href = 'profile.html';
+});
 
-  async function createUserDoc(user, name) {
-    try {
-      const ref = doc(db, 'users', user.uid);
-      const snap = await getDoc(ref);
-      if (!snap.exists()) {
-        await setDoc(ref, { email: user.email, name: name || user.displayName || '', discount: 0, createdAt: serverTimestamp(), cart: [] });
-        console.log('User doc created:', user.uid);
-      } else {
-        console.log('User doc already exists:', user.uid);
-      }
-    } catch(e) {
-      console.error('createUserDoc error:', e.code, e.message);
+async function createUserDoc(user, name) {
+  try {
+    const ref = doc(db, 'users', user.uid);
+    const snap = await getDoc(ref);
+    if (!snap.exists()) {
+      await setDoc(ref, {
+        email: user.email,
+        name: name || user.displayName || '',
+        discount: 0,
+        createdAt: serverTimestamp(),
+        cart: []
+      });
     }
+  } catch(e) {
+    console.error('createUserDoc error:', e.code, e.message);
   }
+}
 
-  window.resetPassword = async function() {
-    const email = document.getElementById('login-email').value.trim();
-    const err = document.getElementById('login-error');
-    if (!email) { err.textContent = 'Введите email для сброса пароля'; err.style.color = '#c00'; return; }
-    try {
-      const { sendPasswordResetEmail } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js');
-      await sendPasswordResetEmail(auth, email);
-      err.textContent = '✓ Письмо со сбросом пароля отправлено';
-      err.style.color = '#2a7a2a';
-    } catch(e) {
-      err.textContent = 'Ошибка: ' + (e.code === 'auth/user-not-found' ? 'Email не найден' : e.message);
-      err.style.color = '#c00';
-    }
-  };
+document.getElementById('btn-login').addEventListener('click', async function() {
+  const email = document.getElementById('login-email').value.trim();
+  const pass  = document.getElementById('login-password').value;
+  const err   = document.getElementById('login-error');
+  err.textContent = '';
+  if (!email || !pass) { err.textContent = 'Введите email и пароль'; return; }
+  try {
+    await signInWithEmailAndPassword(auth, email, pass);
+  } catch(e) {
+    err.textContent = e.code === 'auth/invalid-credential' || e.code === 'auth/wrong-password' ? 'Неверный email или пароль' : 'Ошибка входа';
+  }
+});
 
-  window.loginWithEmail = async function() {
-    const email = document.getElementById('login-email').value.trim();
-    const pass  = document.getElementById('login-password').value;
-    const err   = document.getElementById('login-error');
-    err.textContent = '';
-    try {
-      await signInWithEmailAndPassword(auth, email, pass);
-    } catch(e) {
-      err.textContent = e.code === 'auth/invalid-credential' ? 'Неверный email или пароль' : 'Ошибка входа';
-    }
-  };
+document.getElementById('btn-register').addEventListener('click', async function() {
+  const name  = document.getElementById('reg-name').value.trim();
+  const email = document.getElementById('reg-email').value.trim();
+  const pass  = document.getElementById('reg-password').value;
+  const err   = document.getElementById('reg-error');
+  err.textContent = '';
+  if (!email || !pass) { err.textContent = 'Введите email и пароль'; return; }
+  try {
+    const cred = await createUserWithEmailAndPassword(auth, email, pass);
+    if (name) await updateProfile(cred.user, { displayName: name });
+    await createUserDoc(cred.user, name);
+  } catch(e) {
+    err.textContent = e.code === 'auth/email-already-in-use' ? 'Email уже используется' :
+                      e.code === 'auth/weak-password' ? 'Пароль минимум 6 символов' : 'Ошибка регистрации';
+  }
+});
 
-  window.registerWithEmail = async function() {
-    const name  = document.getElementById('reg-name').value.trim();
-    const email = document.getElementById('reg-email').value.trim();
-    const pass  = document.getElementById('reg-password').value;
-    const err   = document.getElementById('reg-error');
-    err.textContent = '';
-    try {
-      const cred = await createUserWithEmailAndPassword(auth, email, pass);
-      if (name) await updateProfile(cred.user, { displayName: name });
-      await createUserDoc(cred.user, name);
-    } catch(e) {
-      err.textContent = e.code === 'auth/email-already-in-use' ? 'Email уже используется' :
-                        e.code === 'auth/weak-password' ? 'Пароль минимум 6 символов' : 'Ошибка регистрации';
-    }
-  };
-
-
+document.getElementById('btn-reset').addEventListener('click', async function() {
+  const email = document.getElementById('login-email').value.trim();
+  const err   = document.getElementById('login-error');
+  if (!email) { err.style.color = '#c00'; err.textContent = 'Введите email для сброса пароля'; return; }
+  try {
+    await sendPasswordResetEmail(auth, email);
+    err.style.color = '#2a7a2a';
+    err.textContent = '✓ Письмо со сбросом пароля отправлено';
+  } catch(e) {
+    err.style.color = '#c00';
+    err.textContent = e.code === 'auth/user-not-found' ? 'Email не найден' : 'Ошибка';
+  }
+});
 </script>
 
 </body>
