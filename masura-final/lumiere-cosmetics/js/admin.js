@@ -648,3 +648,112 @@ function initMobileMenu() {
     });
   });
 }
+
+// ============================================================
+// USERS
+// ============================================================
+
+async function loadUsers() {
+  const tbody = document.getElementById('users-table-body');
+  if (!tbody) return;
+  try {
+    const { collection, getDocs, orderBy, query } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
+    const snap = await getDocs(query(collection(db, 'users'), orderBy('createdAt', 'desc')));
+    if (snap.empty) {
+      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#999;padding:40px">Пользователей пока нет</td></tr>';
+      return;
+    }
+    tbody.innerHTML = snap.docs.map(d => {
+      const u = d.data();
+      const date = u.createdAt?.toDate?.()?.toLocaleDateString('ru-RU') || '—';
+      return `<tr>
+        <td>${u.email || '—'}</td>
+        <td>${u.name || '—'}</td>
+        <td>
+          <input type="number" min="0" max="100" value="${u.discount || 0}"
+            style="width:60px;border:1px solid #E5D5C5;border-radius:4px;padding:4px 8px;font-size:13px"
+            onchange="saveUserDiscount('${d.id}', this.value)">%
+        </td>
+        <td>${date}</td>
+        <td><button class="btn btn-outline btn-sm" onclick="saveUserDiscount('${d.id}', this.closest('tr').querySelector('input').value)">Сохранить</button></td>
+      </tr>`;
+    }).join('');
+  } catch(e) {
+    tbody.innerHTML = `<tr><td colspan="5" style="color:#c00;padding:20px">${e.message}</td></tr>`;
+  }
+}
+
+window.saveUserDiscount = async function(uid, discount) {
+  try {
+    const { doc, updateDoc } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
+    await updateDoc(doc(db, 'users', uid), { discount: Number(discount) });
+    showToast('Скидка сохранена');
+  } catch(e) {
+    showToast('Ошибка: ' + e.message);
+  }
+};
+
+// ============================================================
+// PROMOCODES
+// ============================================================
+
+async function loadPromocodes() {
+  const tbody = document.getElementById('promo-table-body');
+  if (!tbody) return;
+  try {
+    const { collection, getDocs } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
+    const snap = await getDocs(collection(db, 'promocodes'));
+    if (snap.empty) {
+      tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#999;padding:40px">Промокодов пока нет</td></tr>';
+      return;
+    }
+    tbody.innerHTML = snap.docs.map(d => {
+      const p = d.data();
+      return `<tr>
+        <td><strong>${d.id}</strong></td>
+        <td>${p.discount}%</td>
+        <td><span class="badge ${p.active ? 'badge-hit' : ''}">${p.active ? 'Активен' : 'Отключён'}</span></td>
+        <td style="display:flex;gap:8px">
+          <button class="btn btn-outline btn-sm" onclick="togglePromo('${d.id}', ${!p.active})">${p.active ? 'Отключить' : 'Включить'}</button>
+          <button class="btn btn-outline btn-sm" style="color:#c00" onclick="deletePromo('${d.id}')">Удалить</button>
+        </td>
+      </tr>`;
+    }).join('');
+  } catch(e) { console.error(e); }
+}
+
+window.togglePromo = async function(id, active) {
+  const { doc, updateDoc } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
+  await updateDoc(doc(db, 'promocodes', id), { active });
+  loadPromocodes();
+};
+
+window.deletePromo = async function(id) {
+  if (!confirm(`Удалить промокод ${id}?`)) return;
+  const { doc, deleteDoc } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
+  await deleteDoc(doc(db, 'promocodes', id));
+  loadPromocodes();
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Add promo button
+  document.getElementById('add-promo-btn')?.addEventListener('click', async () => {
+    const code     = prompt('Код промокода (латиница, заглавные):')?.trim().toUpperCase();
+    if (!code) return;
+    const discount = prompt('Скидка в %:');
+    if (!discount || isNaN(discount)) return;
+    const { doc, setDoc } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
+    await setDoc(doc(db, 'promocodes', code), { discount: Number(discount), active: true });
+    showToast(`Промокод ${code} создан`);
+    loadPromocodes();
+  });
+
+  // Section switching - add users and promocodes
+  document.querySelectorAll('.sidebar__item[data-section]').forEach(item => {
+    item.addEventListener('click', () => {
+      const section = item.dataset.section;
+      if (section === 'users') loadUsers();
+      if (section === 'promocodes') loadPromocodes();
+    });
+  });
+});
