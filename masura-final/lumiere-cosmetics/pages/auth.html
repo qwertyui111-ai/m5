@@ -141,7 +141,7 @@ document.getElementById('btn-register').addEventListener('click', async function
     const cred = await createUserWithEmailAndPassword(auth, email, pass);
     if (name) await updateProfile(cred.user, { displayName: name });
     await createUserDoc(cred.user, name);
-    await sendEmailVerification(cred.user);
+    try { await sendEmailVerification(cred.user); } catch(e) { console.warn('verification email error:', e); }
     await signOut(auth);
     err.style.color = '#2a7a2a';
     err.textContent = '✓ Аккаунт создан! Проверьте почту и подтвердите email, затем войдите.';
