@@ -798,7 +798,7 @@ window.loadPromocodes = loadPromocodes;
 async function loadLegal() {
   try {
     const settings = await getSettings();
-    const fields = ['privacy','returns','offer','requisites','cookies'];
+    const fields = ['privacy','delivery','faq','returns','offer','requisites','cookies'];
     fields.forEach(f => {
       const el = document.getElementById('l-' + f);
       if (el) el.value = settings?.['legal_' + f] || '';
@@ -810,7 +810,7 @@ async function loadLegal() {
 
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('save-legal-btn')?.addEventListener('click', async () => {
-    const fields = ['privacy','returns','offer','requisites','cookies'];
+    const fields = ['privacy','delivery','faq','returns','offer','requisites','cookies'];
     const data = {};
     fields.forEach(f => {
       data['legal_' + f] = document.getElementById('l-' + f)?.value.trim() || '';
