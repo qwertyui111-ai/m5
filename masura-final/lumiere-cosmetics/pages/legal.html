@@ -83,8 +83,16 @@
     const fields = ['privacy','returns','offer','requisites','cookies'];
     fields.forEach(f => {
       const el = document.getElementById('content-' + f);
+      const url  = settings?.['legal_' + f + '_url'];
       const text = settings?.['legal_' + f];
-      el.innerHTML = text ? text.replace(/</g,'&lt;') : '<span class="legal-empty">Документ не добавлен</span>';
+      if (url) {
+        el.innerHTML = '<a href="' + url + '" target="_blank" style="display:inline-block;background:#111;color:#fff;font-family:var(--font-body);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;padding:12px 24px;text-decoration:none;margin-bottom:16px">Открыть документ →</a>' +
+          (text ? '<br><br>' + text.replace(/</g,'&lt;') : '');
+      } else if (text) {
+        el.innerHTML = text.replace(/</g,'&lt;');
+      } else {
+        el.innerHTML = '<span class="legal-empty">Документ не добавлен</span>';
+      }
     });
   </script>
 </body>
