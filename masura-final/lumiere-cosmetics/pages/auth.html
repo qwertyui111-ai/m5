@@ -90,7 +90,7 @@
 
 <script type="module">
   import { auth, db } from '../js/firebase-config.js';
-  import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, signInWithRedirect, getRedirectResult, GoogleAuthProvider, onAuthStateChanged, updateProfile } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+  import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, updateProfile } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
   import { doc, setDoc, getDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
   onAuthStateChanged(auth, function(user) {
@@ -133,17 +133,14 @@
     }
   };
 
-  // Handle redirect result on page load
-  getRedirectResult(auth).then(async result => {
-    if (result?.user) await createUserDoc(result.user, '');
-  }).catch(e => console.warn('Redirect result error:', e));
-
   window.loginWithGoogle = async function() {
     try {
       const provider = new GoogleAuthProvider();
-      await signInWithRedirect(auth, provider);
+      const cred = await signInWithPopup(auth, provider);
+      await createUserDoc(cred.user, '');
     } catch(e) {
-      document.getElementById('login-error').textContent = 'Ошибка входа через Google';
+      console.error('Google login error:', e);
+      document.getElementById('login-error').textContent = 'Ошибка входа через Google: ' + e.code;
     }
   };
 </script>
