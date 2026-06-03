@@ -28,12 +28,21 @@ onAuthStateChanged(auth, async user => {
   if (user) {
     // Check admin role
     try {
-      const { doc, getDoc } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
-      const snap = await getDoc(doc(window._db, 'users', user.uid));
-      if (!snap.exists() || snap.data().role !== 'admin') {
-        await signOut(auth);
-        showError('Нет доступа. Только администраторы могут войти.');
-        return;
+      // Wait for _db to be initialized
+      let attempts = 0;
+      while (!window._db && attempts < 20) {
+        await new Promise(r => setTimeout(r, 100));
+        attempts++;
+      }
+      if (!window._db) { console.warn('DB not ready'); }
+      else {
+        const { doc, getDoc } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
+        const snap = await getDoc(doc(window._db, 'users', user.uid));
+        if (!snap.exists() || snap.data().role !== 'admin') {
+          await signOut(auth);
+          showError('Нет доступа. Только администраторы могут войти.');
+          return;
+        }
       }
     } catch(e) {
       console.warn('Role check error:', e);
