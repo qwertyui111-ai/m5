@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Правовая информация — Masura</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/nav.css">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #fff; font-family: 'DM Sans', sans-serif; }
+    .legal-wrap { max-width: 860px; margin: 0 auto; padding: 48px 32px 80px; }
+    .legal-tabs { display: flex; flex-wrap: wrap; gap: 0; border-bottom: 1px solid #e8e8e8; margin-bottom: 40px; }
+    .legal-tab { font-family: 'DM Sans', sans-serif; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #999; background: none; border: none; border-bottom: 2px solid transparent; padding: 12px 20px; cursor: pointer; margin-bottom: -1px; transition: all 0.15s; white-space: nowrap; }
+    .legal-tab.active { color: #111; border-bottom-color: #111; }
+    .legal-section { display: none; }
+    .legal-section.active { display: block; }
+    .legal-title { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 400; color: #111; margin-bottom: 24px; }
+    .legal-content { font-size: 13px; color: #444; line-height: 1.9; white-space: pre-wrap; }
+    .legal-empty { color: #aaa; font-size: 13px; font-style: italic; }
+    .back-link { display: inline-block; margin-bottom: 32px; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #aaa; text-decoration: none; }
+    .back-link:hover { color: #111; }
+    @media (max-width: 600px) { .legal-wrap { padding: 24px 16px 60px; } }
+  </style>
+</head>
+<body>
+  <header id="site-nav" class="nav"></header>
+  <main>
+    <div class="legal-wrap">
+      <a href="../index.html" class="back-link">← Вернуться в каталог</a>
+      <div class="legal-tabs" id="legal-tabs">
+        <button class="legal-tab active" onclick="showTab('privacy')">Политика конфиденциальности</button>
+        <button class="legal-tab" onclick="showTab('returns')">Условия возврата</button>
+        <button class="legal-tab" onclick="showTab('offer')">Оферта</button>
+        <button class="legal-tab" onclick="showTab('requisites')">Реквизиты</button>
+        <button class="legal-tab" onclick="showTab('cookies')">Cookies</button>
+      </div>
+
+      <div class="legal-section active" id="tab-privacy">
+        <h1 class="legal-title">Политика конфиденциальности</h1>
+        <div class="legal-content" id="content-privacy"><span class="legal-empty">Загрузка...</span></div>
+      </div>
+      <div class="legal-section" id="tab-returns">
+        <h1 class="legal-title">Условия возврата</h1>
+        <div class="legal-content" id="content-returns"><span class="legal-empty">Загрузка...</span></div>
+      </div>
+      <div class="legal-section" id="tab-offer">
+        <h1 class="legal-title">Публичная оферта</h1>
+        <div class="legal-content" id="content-offer"><span class="legal-empty">Загрузка...</span></div>
+      </div>
+      <div class="legal-section" id="tab-requisites">
+        <h1 class="legal-title">Реквизиты</h1>
+        <div class="legal-content" id="content-requisites"><span class="legal-empty">Загрузка...</span></div>
+      </div>
+      <div class="legal-section" id="tab-cookies">
+        <h1 class="legal-title">Политика использования Cookies</h1>
+        <div class="legal-content" id="content-cookies"><span class="legal-empty">Загрузка...</span></div>
+      </div>
+    </div>
+  </main>
+
+  <script src="../js/nav.js"></script>
+  <script>
+    function showTab(name) {
+      document.querySelectorAll('.legal-tab').forEach((t,i) => {
+        const tabs = ['privacy','returns','offer','requisites','cookies'];
+        t.classList.toggle('active', tabs[i] === name);
+      });
+      document.querySelectorAll('.legal-section').forEach(s => s.classList.remove('active'));
+      document.getElementById('tab-' + name).classList.add('active');
+    }
+  </script>
+  <script type="module">
+    import { getSettings } from '../js/db.js';
+    renderNav('');
+    // Open tab from URL param
+    const urlTab = new URLSearchParams(window.location.search).get('tab');
+    if (urlTab) showTab(urlTab);
+    const settings = await getSettings();
+    const fields = ['privacy','returns','offer','requisites','cookies'];
+    fields.forEach(f => {
+      const el = document.getElementById('content-' + f);
+      const text = settings?.['legal_' + f];
+      el.innerHTML = text ? text.replace(/</g,'&lt;') : '<span class="legal-empty">Документ не добавлен</span>';
+    });
+  </script>
+</body>
+</html>
