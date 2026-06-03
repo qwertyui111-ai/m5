@@ -94,10 +94,14 @@ onAuthStateChanged(auth, function(user) {
 });
 
 async function createUserDoc(user, name) {
+  console.log('createUserDoc called for', user.uid);
   try {
     const ref = doc(db, 'users', user.uid);
+    console.log('checking if doc exists...');
     const snap = await getDoc(ref);
+    console.log('doc exists:', snap.exists());
     if (!snap.exists()) {
+      console.log('creating doc...');
       await setDoc(ref, {
         email: user.email,
         name: name || user.displayName || '',
@@ -105,6 +109,7 @@ async function createUserDoc(user, name) {
         createdAt: serverTimestamp(),
         cart: []
       });
+      console.log('doc created!');
     }
   } catch(e) {
     console.error('createUserDoc error:', e.code, e.message);
