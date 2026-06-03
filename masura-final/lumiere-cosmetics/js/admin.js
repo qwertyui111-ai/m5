@@ -1,5 +1,4 @@
 // v2
-<!-- v2 -->/**
  * LUMIÈRE — Admin Panel Logic
  */
 
