@@ -8,159 +8,32 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/variables.css">
-  <link rel="stylesheet" href="../css/nav.css">
   <style>
-    body { background: #fff; margin: 0; font-family: var(--font-body); }
-    .auth-wrap {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 40px 16px;
-    }
-    .auth-box {
-      width: 100%;
-      max-width: 400px;
-    }
-    .auth-logo {
-      font-family: var(--font-display);
-      font-size: 24px;
-      font-weight: 400;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      text-align: center;
-      margin-bottom: 8px;
-      text-decoration: none;
-      color: #111;
-      display: block;
-    }
-    .auth-subtitle {
-      text-align: center;
-      font-size: 12px;
-      letter-spacing: 0.08em;
-      color: #999;
-      text-transform: uppercase;
-      margin-bottom: 40px;
-    }
-    .auth-tabs {
-      display: flex;
-      border-bottom: 1px solid #e8e8e8;
-      margin-bottom: 32px;
-    }
-    .auth-tab {
-      flex: 1;
-      text-align: center;
-      padding: 12px;
-      font-size: 11px;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: #999;
-      cursor: pointer;
-      border-bottom: 2px solid transparent;
-      margin-bottom: -1px;
-      transition: all 0.15s;
-      background: none;
-      border-left: none;
-      border-right: none;
-      border-top: none;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #fff; font-family: 'DM Sans', sans-serif; }
+    .auth-wrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 40px 16px; }
+    .auth-box { width: 100%; max-width: 400px; }
+    .auth-logo { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 400; letter-spacing: 0.2em; text-transform: uppercase; text-align: center; margin-bottom: 8px; text-decoration: none; color: #111; display: block; }
+    .auth-subtitle { text-align: center; font-size: 12px; letter-spacing: 0.08em; color: #999; text-transform: uppercase; margin-bottom: 40px; }
+    .auth-tabs { display: flex; border-bottom: 1px solid #e8e8e8; margin-bottom: 32px; }
+    .auth-tab { flex: 1; text-align: center; padding: 12px; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #999; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all 0.15s; background: none; border-left: none; border-right: none; border-top: none; font-family: 'DM Sans', sans-serif; }
     .auth-tab.active { color: #111; border-bottom-color: #111; }
     .auth-form { display: none; }
     .auth-form.active { display: block; }
-    .auth-field {
-      margin-bottom: 20px;
-    }
-    .auth-field label {
-      display: block;
-      font-size: 10px;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: #999;
-      margin-bottom: 8px;
-    }
-    .auth-field input {
-      width: 100%;
-      border: none;
-      border-bottom: 1px solid #e8e8e8;
-      padding: 10px 0;
-      font-family: var(--font-body);
-      font-size: 14px;
-      color: #111;
-      outline: none;
-      background: transparent;
-      transition: border-color 0.15s;
-      box-sizing: border-box;
-    }
+    .auth-field { margin-bottom: 20px; }
+    .auth-field label { display: block; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: #999; margin-bottom: 8px; }
+    .auth-field input { width: 100%; border: none; border-bottom: 1px solid #e8e8e8; padding: 10px 0; font-family: 'DM Sans', sans-serif; font-size: 14px; color: #111; outline: none; background: transparent; transition: border-color 0.15s; }
     .auth-field input:focus { border-color: #111; }
-    .auth-btn {
-      width: 100%;
-      background: #111;
-      color: #fff;
-      border: none;
-      font-family: var(--font-body);
-      font-size: 11px;
-      font-weight: 500;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      padding: 16px;
-      cursor: pointer;
-      margin-top: 8px;
-      transition: background 0.15s;
-    }
+    .auth-btn { width: 100%; background: #111; color: #fff; border: none; font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; padding: 16px; cursor: pointer; margin-top: 8px; transition: background 0.15s; }
     .auth-btn:hover { background: #333; }
-    .auth-divider {
-      text-align: center;
-      font-size: 11px;
-      color: #ccc;
-      margin: 20px 0;
-      position: relative;
-    }
-    .auth-divider::before, .auth-divider::after {
-      content: '';
-      position: absolute;
-      top: 50%;
-      width: 42%;
-      height: 1px;
-      background: #e8e8e8;
-    }
+    .auth-divider { text-align: center; font-size: 11px; color: #ccc; margin: 20px 0; position: relative; }
+    .auth-divider::before, .auth-divider::after { content: ''; position: absolute; top: 50%; width: 42%; height: 1px; background: #e8e8e8; }
     .auth-divider::before { left: 0; }
     .auth-divider::after { right: 0; }
-    .auth-google-btn {
-      width: 100%;
-      background: #fff;
-      color: #111;
-      border: 1px solid #e8e8e8;
-      font-family: var(--font-body);
-      font-size: 12px;
-      font-weight: 400;
-      letter-spacing: 0.05em;
-      padding: 14px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      transition: border-color 0.15s;
-    }
+    .auth-google-btn { width: 100%; background: #fff; color: #111; border: 1px solid #e8e8e8; font-family: 'DM Sans', sans-serif; font-size: 12px; padding: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: border-color 0.15s; }
     .auth-google-btn:hover { border-color: #111; }
-    .auth-error {
-      font-size: 12px;
-      color: #c00;
-      margin-top: 12px;
-      text-align: center;
-      min-height: 18px;
-    }
-    .auth-back {
-      display: block;
-      text-align: center;
-      margin-top: 24px;
-      font-size: 11px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: #aaa;
-      text-decoration: none;
-      transition: color 0.15s;
-    }
+    .auth-error { font-size: 12px; color: #c00; margin-top: 12px; text-align: center; min-height: 18px; }
+    .auth-back { display: block; text-align: center; margin-top: 24px; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #aaa; text-decoration: none; transition: color 0.15s; }
     .auth-back:hover { color: #111; }
   </style>
 </head>
@@ -176,16 +49,9 @@
       <button class="auth-tab" onclick="switchTab('register')">Регистрация</button>
     </div>
 
-    <!-- Login -->
     <div class="auth-form active" id="form-login">
-      <div class="auth-field">
-        <label>Email</label>
-        <input type="email" id="login-email" placeholder="your@email.com" autocomplete="email">
-      </div>
-      <div class="auth-field">
-        <label>Пароль</label>
-        <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password">
-      </div>
+      <div class="auth-field"><label>Email</label><input type="email" id="login-email" placeholder="your@email.com" autocomplete="email"></div>
+      <div class="auth-field"><label>Пароль</label><input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password"></div>
       <button class="auth-btn" onclick="loginWithEmail()">Войти</button>
       <div class="auth-divider">или</div>
       <button class="auth-google-btn" onclick="loginWithGoogle()">
@@ -195,20 +61,10 @@
       <p class="auth-error" id="login-error"></p>
     </div>
 
-    <!-- Register -->
     <div class="auth-form" id="form-register">
-      <div class="auth-field">
-        <label>Имя</label>
-        <input type="text" id="reg-name" placeholder="Ваше имя">
-      </div>
-      <div class="auth-field">
-        <label>Email</label>
-        <input type="email" id="reg-email" placeholder="your@email.com" autocomplete="email">
-      </div>
-      <div class="auth-field">
-        <label>Пароль</label>
-        <input type="password" id="reg-password" placeholder="Минимум 6 символов" autocomplete="new-password">
-      </div>
+      <div class="auth-field"><label>Имя</label><input type="text" id="reg-name" placeholder="Ваше имя"></div>
+      <div class="auth-field"><label>Email</label><input type="email" id="reg-email" placeholder="your@email.com" autocomplete="email"></div>
+      <div class="auth-field"><label>Пароль</label><input type="password" id="reg-password" placeholder="Минимум 6 символов" autocomplete="new-password"></div>
       <button class="auth-btn" onclick="registerWithEmail()">Создать аккаунт</button>
       <div class="auth-divider">или</div>
       <button class="auth-google-btn" onclick="loginWithGoogle()">
@@ -222,40 +78,32 @@
   </div>
 </div>
 
+<script>
+  function switchTab(tab) {
+    document.querySelectorAll('.auth-tab').forEach(function(t, i) {
+      t.classList.toggle('active', (tab==='login'&&i===0)||(tab==='register'&&i===1));
+    });
+    document.getElementById('form-login').classList.toggle('active', tab === 'login');
+    document.getElementById('form-register').classList.toggle('active', tab === 'register');
+  }
+</script>
+
 <script type="module">
-  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-  import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, updateProfile } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
-  import { getFirestore, doc, setDoc, getDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
-  import { firebaseConfig } from '../js/firebase-config.js';
+  import { auth, db } from '../js/firebase-config.js';
+  import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, updateProfile } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+  import { doc, setDoc, getDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
-  const app  = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db   = getFirestore(app);
-
-  // Redirect if already logged in
-  onAuthStateChanged(auth, user => {
-    if (user) window.location.href = '../pages/profile.html';
+  onAuthStateChanged(auth, function(user) {
+    if (user) window.location.href = 'profile.html';
   });
 
   async function createUserDoc(user, name) {
     const ref = doc(db, 'users', user.uid);
     const snap = await getDoc(ref);
     if (!snap.exists()) {
-      await setDoc(ref, {
-        email: user.email,
-        name: name || user.displayName || '',
-        discount: 0,
-        createdAt: serverTimestamp(),
-        cart: []
-      });
+      await setDoc(ref, { email: user.email, name: name || user.displayName || '', discount: 0, createdAt: serverTimestamp(), cart: [] });
     }
   }
-
-  window.switchTab = function(tab) {
-    document.querySelectorAll('.auth-tab').forEach((t,i) => t.classList.toggle('active', (tab==='login'&&i===0)||(tab==='register'&&i===1)));
-    document.getElementById('form-login').classList.toggle('active', tab === 'login');
-    document.getElementById('form-register').classList.toggle('active', tab === 'register');
-  };
 
   window.loginWithEmail = async function() {
     const email = document.getElementById('login-email').value.trim();
@@ -265,7 +113,7 @@
     try {
       await signInWithEmailAndPassword(auth, email, pass);
     } catch(e) {
-      err.textContent = e.code === 'auth/invalid-credential' ? 'Неверный email или пароль' : e.message;
+      err.textContent = e.code === 'auth/invalid-credential' ? 'Неверный email или пароль' : 'Ошибка входа';
     }
   };
 
@@ -281,7 +129,7 @@
       await createUserDoc(cred.user, name);
     } catch(e) {
       err.textContent = e.code === 'auth/email-already-in-use' ? 'Email уже используется' :
-                        e.code === 'auth/weak-password' ? 'Пароль слишком короткий' : e.message;
+                        e.code === 'auth/weak-password' ? 'Пароль слишком короткий' : 'Ошибка регистрации';
     }
   };
 
@@ -291,7 +139,7 @@
       const cred = await signInWithPopup(auth, provider);
       await createUserDoc(cred.user, '');
     } catch(e) {
-      document.getElementById('login-error').textContent = e.message;
+      document.getElementById('login-error').textContent = 'Ошибка входа через Google';
     }
   };
 </script>
