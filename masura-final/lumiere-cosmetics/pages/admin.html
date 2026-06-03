@@ -61,6 +61,10 @@
         <svg viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
         Промокоды
       </div>
+      <div class="sidebar__item" data-section="legal">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        Документы
+      </div>
       <div class="sidebar__item" data-section="settings">
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
         Настройки сайта
@@ -145,6 +149,35 @@
     </section>
 
 
+
+    <!-- LEGAL -->
+    <section class="admin-section" id="section-legal">
+      <h1 class="admin-page-title">Юридические документы</h1>
+      <p class="admin-page-sub">Тексты отображаются на странице /pages/legal.html</p>
+      <div class="settings-card">
+        <h2 class="settings-card__title">Политика конфиденциальности</h2>
+        <div class="form-group"><textarea id="l-privacy" rows="8" placeholder="Текст политики конфиденциальности..."></textarea></div>
+      </div>
+      <div class="settings-card">
+        <h2 class="settings-card__title">Условия возврата</h2>
+        <div class="form-group"><textarea id="l-returns" rows="8" placeholder="Условия возврата товара..."></textarea></div>
+      </div>
+      <div class="settings-card">
+        <h2 class="settings-card__title">Публичная оферта</h2>
+        <div class="form-group"><textarea id="l-offer" rows="8" placeholder="Текст публичной оферты..."></textarea></div>
+      </div>
+      <div class="settings-card">
+        <h2 class="settings-card__title">Реквизиты</h2>
+        <div class="form-group"><textarea id="l-requisites" rows="6" placeholder="ИП Иванов Иван Иванович&#10;ИНН: ...&#10;ОГРН: ..."></textarea></div>
+      </div>
+      <div class="settings-card">
+        <h2 class="settings-card__title">Политика Cookies</h2>
+        <div class="form-group"><textarea id="l-cookies" rows="6" placeholder="Текст политики cookies..."></textarea></div>
+      </div>
+      <div style="display:flex;justify-content:flex-end">
+        <button class="btn btn-primary" id="save-legal-btn">Сохранить документы</button>
+      </div>
+    </section>
     <!-- USERS -->
     <section class="admin-section" id="section-users">
       <h1 class="admin-page-title">Пользователи</h1>
