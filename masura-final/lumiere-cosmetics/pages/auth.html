@@ -52,6 +52,7 @@
       <div class="auth-field"><label>Email</label><input type="email" id="login-email" placeholder="your@email.com" autocomplete="email"></div>
       <div class="auth-field"><label>Пароль</label><input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password"></div>
       <button class="auth-btn" onclick="loginWithEmail()">Войти</button>
+      <p style="text-align:center;margin-top:12px"><button onclick="resetPassword()" style="background:none;border:none;font-family:'DM Sans',sans-serif;font-size:12px;color:#aaa;cursor:pointer;text-decoration:underline;letter-spacing:0.05em">Забыли пароль?</button></p>
 
       <p class="auth-error" id="login-error"></p>
     </div>
@@ -96,6 +97,21 @@
     }
   }
 
+  window.resetPassword = async function() {
+    const email = document.getElementById('login-email').value.trim();
+    const err = document.getElementById('login-error');
+    if (!email) { err.textContent = 'Введите email для сброса пароля'; err.style.color = '#c00'; return; }
+    try {
+      const { sendPasswordResetEmail } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js');
+      await sendPasswordResetEmail(auth, email);
+      err.textContent = '✓ Письмо со сбросом пароля отправлено';
+      err.style.color = '#2a7a2a';
+    } catch(e) {
+      err.textContent = 'Ошибка: ' + (e.code === 'auth/user-not-found' ? 'Email не найден' : e.message);
+      err.style.color = '#c00';
+    }
+  };
+
   window.loginWithEmail = async function() {
     const email = document.getElementById('login-email').value.trim();
     const pass  = document.getElementById('login-password').value;
@@ -120,7 +136,7 @@
       await createUserDoc(cred.user, name);
     } catch(e) {
       err.textContent = e.code === 'auth/email-already-in-use' ? 'Email уже используется' :
-                        e.code === 'auth/weak-password' ? 'Пароль слишком короткий' : 'Ошибка регистрации';
+                        e.code === 'auth/weak-password' ? 'Пароль минимум 6 символов' : 'Ошибка регистрации';
     }
   };
 
