@@ -781,6 +781,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const section = item.dataset.section;
       if (section === 'users') loadUsers();
       if (section === 'promocodes') loadPromocodes();
+      if (section === 'legal') loadLegal();
     });
   });
 });
@@ -788,3 +789,39 @@ document.addEventListener('DOMContentLoaded', () => {
 // Explicitly expose to global scope
 window.loadUsers = loadUsers;
 window.loadPromocodes = loadPromocodes;
+
+
+// ============================================================
+// LEGAL DOCUMENTS
+// ============================================================
+
+async function loadLegal() {
+  try {
+    const settings = await getSettings();
+    const fields = ['privacy','returns','offer','requisites','cookies'];
+    fields.forEach(f => {
+      const el = document.getElementById('l-' + f);
+      if (el) el.value = settings?.['legal_' + f] || '';
+    });
+  } catch(e) { console.error('loadLegal error:', e); }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('save-legal-btn')?.addEventListener('click', async () => {
+    const fields = ['privacy','returns','offer','requisites','cookies'];
+    const data = {};
+    fields.forEach(f => {
+      data['legal_' + f] = document.getElementById('l-' + f)?.value.trim() || '';
+    });
+    try {
+      const { doc, setDoc, getDoc } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
+      const ref = doc(window._db, 'settings', 'main');
+      const snap = await getDoc(ref);
+      const existing = snap.exists() ? snap.data() : {};
+      await setDoc(ref, { ...existing, ...data });
+      showToast('Документы сохранены');
+    } catch(e) {
+      showToast('Ошибка: ' + e.message);
+    }
+  });
+});
