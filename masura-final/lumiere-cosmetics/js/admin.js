@@ -1,4 +1,4 @@
-/**
+<!-- v2 -->/**
  * LUMIÈRE — Admin Panel Logic
  */
 
