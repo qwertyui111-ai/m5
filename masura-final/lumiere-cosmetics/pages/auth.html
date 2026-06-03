@@ -90,10 +90,17 @@
   });
 
   async function createUserDoc(user, name) {
-    const ref = doc(db, 'users', user.uid);
-    const snap = await getDoc(ref);
-    if (!snap.exists()) {
-      await setDoc(ref, { email: user.email, name: name || user.displayName || '', discount: 0, createdAt: serverTimestamp(), cart: [] });
+    try {
+      const ref = doc(db, 'users', user.uid);
+      const snap = await getDoc(ref);
+      if (!snap.exists()) {
+        await setDoc(ref, { email: user.email, name: name || user.displayName || '', discount: 0, createdAt: serverTimestamp(), cart: [] });
+        console.log('User doc created:', user.uid);
+      } else {
+        console.log('User doc already exists:', user.uid);
+      }
+    } catch(e) {
+      console.error('createUserDoc error:', e.code, e.message);
     }
   }
 
