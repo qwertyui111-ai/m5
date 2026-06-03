@@ -1,4 +1,3 @@
-<!-- v2 -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -132,7 +131,9 @@ document.getElementById('btn-login').addEventListener('click', async function() 
       return;
     }
   } catch(e) {
-    err.textContent = e.code === 'auth/invalid-credential' || e.code === 'auth/wrong-password' ? 'Неверный email или пароль' : 'Ошибка входа';
+    err.innerHTML = e.code === 'auth/invalid-credential' || e.code === 'auth/wrong-password'
+      ? 'Не удалось войти. Проверьте правильность email и пароля.<br>Если вы ещё не подтвердили почту — пожалуйста, перейдите по ссылке из письма.'
+      : 'Ошибка входа';
   }
 });
 
