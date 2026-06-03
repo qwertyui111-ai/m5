@@ -33,6 +33,8 @@
       <a href="../index.html" class="back-link">← Вернуться в каталог</a>
       <div class="legal-tabs" id="legal-tabs">
         <button class="legal-tab active" onclick="showTab('privacy')">Политика конфиденциальности</button>
+        <button class="legal-tab" onclick="showTab('delivery')">Доставка и оплата</button>
+        <button class="legal-tab" onclick="showTab('faq')">FAQ</button>
         <button class="legal-tab" onclick="showTab('returns')">Условия возврата</button>
         <button class="legal-tab" onclick="showTab('offer')">Оферта</button>
         <button class="legal-tab" onclick="showTab('requisites')">Реквизиты</button>
@@ -42,6 +44,14 @@
       <div class="legal-section active" id="tab-privacy">
         <h1 class="legal-title">Политика конфиденциальности</h1>
         <div class="legal-content" id="content-privacy"><span class="legal-empty">Загрузка...</span></div>
+      </div>
+      <div class="legal-section" id="tab-delivery">
+        <h1 class="legal-title">Доставка и оплата</h1>
+        <div class="legal-content" id="content-delivery"><span class="legal-empty">Загрузка...</span></div>
+      </div>
+      <div class="legal-section" id="tab-faq">
+        <h1 class="legal-title">Часто задаваемые вопросы</h1>
+        <div class="legal-content" id="content-faq"><span class="legal-empty">Загрузка...</span></div>
       </div>
       <div class="legal-section" id="tab-returns">
         <h1 class="legal-title">Условия возврата</h1>
@@ -66,7 +76,7 @@
   <script>
     function showTab(name) {
       document.querySelectorAll('.legal-tab').forEach((t,i) => {
-        const tabs = ['privacy','returns','offer','requisites','cookies'];
+        const tabs = ['privacy','delivery','faq','returns','offer','requisites','cookies'];
         t.classList.toggle('active', tabs[i] === name);
       });
       document.querySelectorAll('.legal-section').forEach(s => s.classList.remove('active'));
@@ -80,7 +90,7 @@
     const urlTab = new URLSearchParams(window.location.search).get('tab');
     if (urlTab) showTab(urlTab);
     const settings = await getSettings();
-    const fields = ['privacy','returns','offer','requisites','cookies'];
+    const fields = ['privacy','delivery','faq','returns','offer','requisites','cookies'];
     fields.forEach(f => {
       const el = document.getElementById('content-' + f);
       const url  = settings?.['legal_' + f + '_url'];
