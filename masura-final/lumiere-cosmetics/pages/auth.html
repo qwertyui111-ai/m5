@@ -56,6 +56,10 @@
       <div class="auth-field"><label>Имя</label><input type="text" id="reg-name" placeholder="Ваше имя" autocomplete="name"></div>
       <div class="auth-field"><label>Email</label><input type="email" id="reg-email" placeholder="your@email.com" autocomplete="email"></div>
       <div class="auth-field"><label>Пароль (минимум 6 символов)</label><input type="password" id="reg-password" placeholder="••••••••" autocomplete="new-password"></div>
+      <div style="margin-bottom:16px;display:flex;align-items:flex-start;gap:10px">
+        <input type="checkbox" id="reg-consent" style="margin-top:3px;flex-shrink:0">
+        <label for="reg-consent" style="font-size:11px;color:#999;line-height:1.5">Я соглашаюсь с <a href="legal.html?tab=privacy" target="_blank" style="color:#111">политикой конфиденциальности</a> и даю согласие на обработку персональных данных</label>
+      </div>
       <button class="auth-btn" id="btn-register">Создать аккаунт</button>
       <p class="auth-error" id="reg-error"></p>
     </div>
@@ -144,6 +148,10 @@ document.getElementById('btn-register').addEventListener('click', async function
   const err   = document.getElementById('reg-error');
   err.textContent = '';
   if (!email || !pass) { err.textContent = 'Введите email и пароль'; return; }
+  if (!document.getElementById('reg-consent').checked) {
+    err.textContent = 'Необходимо согласиться с политикой конфиденциальности';
+    return;
+  }
   try {
     const cred = await createUserWithEmailAndPassword(auth, email, pass);
     if (name) await updateProfile(cred.user, { displayName: name });
