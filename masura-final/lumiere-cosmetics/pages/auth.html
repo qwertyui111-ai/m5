@@ -79,8 +79,10 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   sendPasswordResetEmail,
+  sendEmailVerification,
   onAuthStateChanged,
-  updateProfile
+  updateProfile,
+  signOut
 } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
 import {
   doc, setDoc, getDoc, serverTimestamp
@@ -116,7 +118,13 @@ document.getElementById('btn-login').addEventListener('click', async function() 
   err.textContent = '';
   if (!email || !pass) { err.textContent = 'Введите email и пароль'; return; }
   try {
-    await signInWithEmailAndPassword(auth, email, pass);
+    const cred = await signInWithEmailAndPassword(auth, email, pass);
+    if (!cred.user.emailVerified) {
+      await signOut(auth);
+      err.style.color = '#c00';
+      err.textContent = 'Подтвердите email — проверьте почту и перейдите по ссылке в письме';
+      return;
+    }
   } catch(e) {
     err.textContent = e.code === 'auth/invalid-credential' || e.code === 'auth/wrong-password' ? 'Неверный email или пароль' : 'Ошибка входа';
   }
@@ -133,6 +141,13 @@ document.getElementById('btn-register').addEventListener('click', async function
     const cred = await createUserWithEmailAndPassword(auth, email, pass);
     if (name) await updateProfile(cred.user, { displayName: name });
     await createUserDoc(cred.user, name);
+    await sendEmailVerification(cred.user);
+    await signOut(auth);
+    err.style.color = '#2a7a2a';
+    err.textContent = '✓ Аккаунт создан! Проверьте почту и подтвердите email, затем войдите.';
+    document.getElementById('reg-name').value = '';
+    document.getElementById('reg-email').value = '';
+    document.getElementById('reg-password').value = '';
   } catch(e) {
     err.textContent = e.code === 'auth/email-already-in-use' ? 'Email уже используется' :
                       e.code === 'auth/weak-password' ? 'Пароль минимум 6 символов' : 'Ошибка регистрации';
