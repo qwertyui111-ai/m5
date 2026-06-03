@@ -156,23 +156,28 @@
       <p class="admin-page-sub">Тексты отображаются на странице /pages/legal.html</p>
       <div class="settings-card">
         <h2 class="settings-card__title">Политика конфиденциальности</h2>
-        <div class="form-group"><textarea id="l-privacy" rows="8" placeholder="Текст политики конфиденциальности..."></textarea></div>
+        <div class="form-group"><label>URL файла <span style="font-size:10px;color:#aaa">(Google Drive, Яндекс Диск и др. — оставьте пустым если используете текст)</span></label><input type="text" id="l-privacy-url" placeholder="https://drive.google.com/..."></div>
+        <div class="form-group"><textarea id="l-privacy" rows="6" placeholder="Или введите текст..."></textarea></div>
       </div>
       <div class="settings-card">
         <h2 class="settings-card__title">Условия возврата</h2>
-        <div class="form-group"><textarea id="l-returns" rows="8" placeholder="Условия возврата товара..."></textarea></div>
+        <div class="form-group"><label>URL файла</label><input type="text" id="l-returns-url" placeholder="https://drive.google.com/..."></div>
+        <div class="form-group"><textarea id="l-returns" rows="6" placeholder="Или введите текст..."></textarea></div>
       </div>
       <div class="settings-card">
         <h2 class="settings-card__title">Публичная оферта</h2>
-        <div class="form-group"><textarea id="l-offer" rows="8" placeholder="Текст публичной оферты..."></textarea></div>
+        <div class="form-group"><label>URL файла</label><input type="text" id="l-offer-url" placeholder="https://drive.google.com/..."></div>
+        <div class="form-group"><textarea id="l-offer" rows="6" placeholder="Или введите текст..."></textarea></div>
       </div>
       <div class="settings-card">
         <h2 class="settings-card__title">Реквизиты</h2>
-        <div class="form-group"><textarea id="l-requisites" rows="6" placeholder="ИП Иванов Иван Иванович&#10;ИНН: ...&#10;ОГРН: ..."></textarea></div>
+        <div class="form-group"><label>URL файла</label><input type="text" id="l-requisites-url" placeholder="https://drive.google.com/..."></div>
+        <div class="form-group"><textarea id="l-requisites" rows="4" placeholder="Или введите текст..."></textarea></div>
       </div>
       <div class="settings-card">
         <h2 class="settings-card__title">Политика Cookies</h2>
-        <div class="form-group"><textarea id="l-cookies" rows="6" placeholder="Текст политики cookies..."></textarea></div>
+        <div class="form-group"><label>URL файла</label><input type="text" id="l-cookies-url" placeholder="https://drive.google.com/..."></div>
+        <div class="form-group"><textarea id="l-cookies" rows="4" placeholder="Или введите текст..."></textarea></div>
       </div>
       <div style="display:flex;justify-content:flex-end">
         <button class="btn btn-primary" id="save-legal-btn">Сохранить документы</button>
