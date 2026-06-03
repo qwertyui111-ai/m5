@@ -10,122 +10,33 @@
   <link rel="stylesheet" href="../css/variables.css">
   <link rel="stylesheet" href="../css/nav.css">
   <style>
-    body { background: #fff; margin: 0; font-family: var(--font-body); }
-    .profile-wrap {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 48px 32px 80px;
-    }
-    .profile-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      padding-bottom: 24px;
-      border-bottom: 1px solid #e8e8e8;
-      margin-bottom: 40px;
-    }
-    .profile-name {
-      font-family: var(--font-display);
-      font-size: 32px;
-      font-weight: 400;
-      color: #111;
-      margin-bottom: 4px;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #fff; font-family: 'DM Sans', sans-serif; }
+    .profile-wrap { max-width: 800px; margin: 0 auto; padding: 48px 32px 80px; }
+    .profile-header { display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 24px; border-bottom: 1px solid #e8e8e8; margin-bottom: 40px; }
+    .profile-name { font-family: 'Cormorant Garamond', serif; font-size: 32px; font-weight: 400; color: #111; margin-bottom: 4px; }
     .profile-email { font-size: 13px; color: #999; }
-    .profile-discount {
-      background: #111;
-      color: #fff;
-      font-size: 11px;
-      font-weight: 500;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      padding: 8px 16px;
-      margin-top: 8px;
-      display: inline-block;
-    }
-    .logout-btn {
-      background: none;
-      border: 1px solid #e8e8e8;
-      font-family: var(--font-body);
-      font-size: 11px;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: #999;
-      padding: 10px 20px;
-      cursor: pointer;
-      transition: all 0.15s;
-    }
+    .profile-discount { background: #111; color: #fff; font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 8px 16px; margin-top: 8px; display: inline-block; }
+    .logout-btn { background: none; border: 1px solid #e8e8e8; font-family: 'DM Sans', sans-serif; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #999; padding: 10px 20px; cursor: pointer; transition: all 0.15s; }
     .logout-btn:hover { border-color: #111; color: #111; }
     .profile-section { margin-bottom: 48px; }
-    .profile-section__title {
-      font-size: 11px;
-      font-weight: 500;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: #111;
-      margin-bottom: 20px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid #e8e8e8;
-    }
-    /* Orders */
-    .order-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 16px 0;
-      border-bottom: 1px solid #f5f5f5;
-      font-size: 13px;
-    }
+    .profile-section__title { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: #111; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid #e8e8e8; }
+    .order-item { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px solid #f5f5f5; font-size: 13px; gap: 12px; }
     .order-item__num { font-weight: 500; color: #111; }
     .order-item__date { color: #999; font-size: 12px; }
     .order-item__total { font-weight: 500; }
-    .order-item__status {
-      font-size: 10px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      padding: 4px 10px;
-      background: #f5f5f5;
-      color: #666;
-    }
+    .order-item__status { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; padding: 4px 10px; background: #f5f5f5; color: #666; white-space: nowrap; }
     .order-item__status--new { background: #111; color: #fff; }
-    /* Promo */
-    .promo-form {
-      display: flex;
-      gap: 12px;
-      max-width: 400px;
-    }
-    .promo-input {
-      flex: 1;
-      border: none;
-      border-bottom: 1px solid #e8e8e8;
-      font-family: var(--font-body);
-      font-size: 13px;
-      padding: 10px 0;
-      outline: none;
-      background: transparent;
-      transition: border-color 0.15s;
-    }
+    .promo-form { display: flex; gap: 12px; max-width: 400px; }
+    .promo-input { flex: 1; border: none; border-bottom: 1px solid #e8e8e8; font-family: 'DM Sans', sans-serif; font-size: 13px; padding: 10px 0; outline: none; background: transparent; transition: border-color 0.15s; }
     .promo-input:focus { border-color: #111; }
-    .promo-btn {
-      background: #111;
-      color: #fff;
-      border: none;
-      font-family: var(--font-body);
-      font-size: 11px;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      padding: 10px 20px;
-      cursor: pointer;
-    }
+    .promo-btn { background: #111; color: #fff; border: none; font-family: 'DM Sans', sans-serif; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; padding: 10px 20px; cursor: pointer; white-space: nowrap; }
     .promo-result { font-size: 12px; margin-top: 8px; }
     .promo-result.success { color: #2a7a2a; }
     .promo-result.error { color: #c00; }
-    .empty-state {
-      text-align: center;
-      padding: 40px 0;
-      color: #aaa;
-      font-size: 13px;
-    }
+    .empty-state { text-align: center; padding: 40px 0; color: #aaa; font-size: 13px; }
+    .back-link { display: block; text-align: center; margin-top: 24px; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #aaa; text-decoration: none; }
+    .back-link:hover { color: #111; }
     @media (max-width: 600px) {
       .profile-wrap { padding: 24px 16px 60px; }
       .profile-header { flex-direction: column; gap: 16px; }
@@ -136,7 +47,6 @@
 
 <main>
   <div class="profile-wrap" id="profile-content" style="display:none">
-
     <div class="profile-header">
       <div>
         <h1 class="profile-name" id="profile-name">—</h1>
@@ -145,63 +55,58 @@
           <span class="profile-discount" id="profile-discount"></span>
         </div>
       </div>
-      <button class="logout-btn" onclick="logoutUser()">Выйти</button>
+      <button class="logout-btn" onclick="window.logoutUser()">Выйти</button>
     </div>
 
-    <!-- Промокод -->
     <div class="profile-section">
       <p class="profile-section__title">Промокод</p>
       <div class="promo-form">
         <input type="text" class="promo-input" id="promo-input" placeholder="Введите промокод">
-        <button class="promo-btn" onclick="applyPromocode()">Применить</button>
+        <button class="promo-btn" onclick="window.applyPromocode()">Применить</button>
       </div>
       <p class="promo-result" id="promo-result"></p>
     </div>
 
-    <!-- История заказов -->
     <div class="profile-section">
       <p class="profile-section__title">История заказов</p>
-      <div id="orders-list"><div class="empty-state">Заказов пока нет</div></div>
+      <div id="orders-list"><div class="empty-state">Загрузка...</div></div>
     </div>
 
+    <a href="../index.html" class="back-link">← Вернуться в каталог</a>
   </div>
 
   <div id="auth-redirect" style="display:none;text-align:center;padding:80px 16px">
     <p style="font-size:13px;color:#999;margin-bottom:24px">Войдите чтобы просмотреть профиль</p>
-    <a href="auth.html" style="background:#111;color:#fff;font-family:var(--font-body);font-size:11px;letter-spacing:0.15em;text-transform:uppercase;padding:14px 32px;text-decoration:none">Войти</a>
+    <a href="auth.html" style="background:#111;color:#fff;font-family:'DM Sans',sans-serif;font-size:11px;letter-spacing:0.15em;text-transform:uppercase;padding:14px 32px;text-decoration:none">Войти</a>
   </div>
 </main>
 
 <script type="module">
-  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-  import { getAuth, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
-  import { getFirestore, doc, getDoc, collection, query, where, getDocs, updateDoc, orderBy } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
-  import { firebaseConfig } from '../js/firebase-config.js';
+  import { auth, db } from '../js/firebase-config.js';
+  import { signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+  import { doc, getDoc, collection, query, where, getDocs, updateDoc, orderBy } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
-  const app  = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db   = getFirestore(app);
-
-  onAuthStateChanged(auth, async user => {
+  onAuthStateChanged(auth, async function(user) {
     if (!user) {
       document.getElementById('auth-redirect').style.display = 'block';
       return;
     }
+
     document.getElementById('profile-content').style.display = 'block';
     document.getElementById('profile-name').textContent  = user.displayName || user.email.split('@')[0];
     document.getElementById('profile-email').textContent = user.email;
 
-    // Load user data
-    const userSnap = await getDoc(doc(db, 'users', user.uid));
-    if (userSnap.exists()) {
-      const data = userSnap.data();
-      if (data.discount > 0) {
-        document.getElementById('profile-discount-wrap').style.display = 'block';
-        document.getElementById('profile-discount').textContent = `Скидка ${data.discount}%`;
+    try {
+      const userSnap = await getDoc(doc(db, 'users', user.uid));
+      if (userSnap.exists()) {
+        const data = userSnap.data();
+        if (data.discount > 0) {
+          document.getElementById('profile-discount-wrap').style.display = 'block';
+          document.getElementById('profile-discount').textContent = 'Скидка ' + data.discount + '%';
+        }
       }
-    }
+    } catch(e) { console.warn('User data error:', e); }
 
-    // Load orders
     try {
       const q = query(collection(db, 'orders'), where('userId', '==', user.uid), orderBy('createdAt', 'desc'));
       const snap = await getDocs(q);
@@ -209,17 +114,12 @@
       if (snap.empty) {
         list.innerHTML = '<div class="empty-state">Заказов пока нет</div>';
       } else {
-        list.innerHTML = snap.docs.map(d => {
+        list.innerHTML = snap.docs.map(function(d) {
           const o = d.data();
           const date = o.createdAt?.toDate?.()?.toLocaleDateString('ru-RU') || '—';
-          return `<div class="order-item">
-            <div>
-              <div class="order-item__num">Заказ #${d.id.slice(-6).toUpperCase()}</div>
-              <div class="order-item__date">${date}</div>
-            </div>
-            <div class="order-item__total">${Number(o.total||0).toLocaleString('ru-RU')} ₽</div>
-            <span class="order-item__status ${o.status==='new'?'order-item__status--new':''}">${o.status==='new'?'Новый':o.status==='processing'?'В обработке':o.status==='done'?'Выполнен':'—'}</span>
-          </div>`;
+          const statusClass = o.status === 'new' ? 'order-item__status--new' : '';
+          const statusText = o.status === 'new' ? 'Новый' : o.status === 'processing' ? 'В обработке' : o.status === 'done' ? 'Выполнен' : '—';
+          return '<div class="order-item"><div><div class="order-item__num">Заказ #' + d.id.slice(-6).toUpperCase() + '</div><div class="order-item__date">' + date + '</div></div><div class="order-item__total">' + Number(o.total||0).toLocaleString('ru-RU') + ' ₽</div><span class="order-item__status ' + statusClass + '">' + statusText + '</span></div>';
         }).join('');
       }
     } catch(e) { console.warn('Orders error:', e); }
@@ -231,10 +131,9 @@
   };
 
   window.applyPromocode = async function() {
-    const code = document.getElementById('promo-input').value.trim().toUpperCase();
+    const code   = document.getElementById('promo-input').value.trim().toUpperCase();
     const result = document.getElementById('promo-result');
     if (!code) return;
-
     try {
       const snap = await getDoc(doc(db, 'promocodes', code));
       if (!snap.exists() || !snap.data().active) {
@@ -242,13 +141,11 @@
         result.className = 'promo-result error';
         return;
       }
-      const promo = snap.data();
-      // Save discount to user
       const user = auth.currentUser;
-      await updateDoc(doc(db, 'users', user.uid), { discount: promo.discount });
+      await updateDoc(doc(db, 'users', user.uid), { discount: snap.data().discount });
       document.getElementById('profile-discount-wrap').style.display = 'block';
-      document.getElementById('profile-discount').textContent = `Скидка ${promo.discount}%`;
-      result.textContent = `✓ Промокод применён — скидка ${promo.discount}%`;
+      document.getElementById('profile-discount').textContent = 'Скидка ' + snap.data().discount + '%';
+      result.textContent = '✓ Промокод применён — скидка ' + snap.data().discount + '%';
       result.className = 'promo-result success';
     } catch(e) {
       result.textContent = 'Ошибка при проверке промокода';
