@@ -802,6 +802,8 @@ async function loadLegal() {
     fields.forEach(f => {
       const el = document.getElementById('l-' + f);
       if (el) el.value = settings?.['legal_' + f] || '';
+      const urlEl = document.getElementById('l-' + f + '-url');
+      if (urlEl) urlEl.value = settings?.['legal_' + f + '_url'] || '';
     });
   } catch(e) { console.error('loadLegal error:', e); }
 }
@@ -812,6 +814,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const data = {};
     fields.forEach(f => {
       data['legal_' + f] = document.getElementById('l-' + f)?.value.trim() || '';
+      data['legal_' + f + '_url'] = document.getElementById('l-' + f + '-url')?.value.trim() || '';
     });
     try {
       const { doc, setDoc, getDoc } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
