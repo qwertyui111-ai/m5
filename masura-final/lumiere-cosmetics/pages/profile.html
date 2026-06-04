@@ -130,6 +130,8 @@
 
   window.logoutUser = async function() {
     await signOut(auth);
+    // Очищаем корзину при выходе
+    localStorage.removeItem('masura_cart');
     window.location.href = '../index.html';
   };
 
