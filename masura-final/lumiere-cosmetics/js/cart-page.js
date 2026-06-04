@@ -119,7 +119,7 @@ function renderOrderSummary() {
       <button class="btn btn-accent checkout-btn" onclick="handleCheckout()">
         Оформить заказ
       </button>
-      <a href="/pages/catalog.html" class="continue-link">Продолжить покупки</a>
+      <a href="../index.html" class="continue-link">Продолжить покупки</a>
     </aside>
   `;
 }
@@ -131,7 +131,7 @@ function renderEmptyCart() {
       <div class="cart-empty__icon" aria-hidden="true">✦</div>
       <h2 class="cart-empty__title display-font">Корзина пуста</h2>
       <p class="cart-empty__text">Добавьте товары из нашего каталога</p>
-      <a href="/pages/catalog.html" class="btn btn-primary">Перейти в каталог</a>
+      <a href="../index.html" class="btn btn-primary">Перейти в каталог</a>
     </div>
   `;
 }
