@@ -78,7 +78,7 @@ function renderOrderSummary() {
   const rawSub   = Cart.getSubtotal();
   const sub      = appliedDiscount > 0 ? Math.round(rawSub * (1 - appliedDiscount / 100)) : rawSub;
   const delivery = Cart.getDelivery();
-  const total    = Cart.getTotal();
+  const total    = sub + delivery;
   const count    = Cart.getCount();
 
   return `
