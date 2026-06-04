@@ -839,7 +839,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // DASHBOARD ANALYTICS
 // ============================================================
 
-async function loadDashboard(days = 30) {
+window.loadDashboard = async function loadDashboard(days = 30) {
   try {
     const { collection, getDocs } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
     const _db = window._db;
@@ -868,7 +868,7 @@ async function loadDashboard(days = 30) {
   } catch(e) { console.warn('Dashboard error:', e); }
 }
 
-async function loadSales(days = 30) {
+window.loadSales = async function loadSales(days = 30) {
   // Highlight active period button
   [7, 30, 90].forEach(d => {
     const btn = document.getElementById('period-' + d);
