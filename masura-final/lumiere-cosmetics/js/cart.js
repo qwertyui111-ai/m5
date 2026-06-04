@@ -23,7 +23,8 @@ const Cart = (() => {
   // Синхронизация с Firebase если пользователь залогинен
   async function syncToFirebase() {
     try {
-      const { auth, db } = await import('./firebase-config.js').catch(() => ({}));
+      const base = window.location.pathname.includes('/pages/') ? '../js/' : './js/';
+      const { auth, db } = await import(base + 'firebase-config.js').catch(() => ({}));
       if (!auth || !db) return;
       const user = auth.currentUser;
       if (!user) return;
@@ -35,7 +36,8 @@ const Cart = (() => {
   // Загрузка корзины из Firebase при входе
   async function loadFromFirebase() {
     try {
-      const { auth, db } = await import('./firebase-config.js').catch(() => ({}));
+      const base = window.location.pathname.includes('/pages/') ? '../js/' : './js/';
+      const { auth, db } = await import(base + 'firebase-config.js').catch(() => ({}));
       if (!auth || !db) return;
       const user = auth.currentUser;
       if (!user) return;
@@ -129,7 +131,8 @@ document.addEventListener('DOMContentLoaded', updateCartBadge);
 // При загрузке — если пользователь залогинен, загружаем его корзину
 document.addEventListener('DOMContentLoaded', async function() {
   try {
-    const { auth } = await import('./firebase-config.js').catch(() => ({}));
+    const base = window.location.pathname.includes('/pages/') ? '../js/' : './js/';
+    const { auth } = await import(base + 'firebase-config.js').catch(() => ({}));
     if (!auth) return;
     const { onAuthStateChanged } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js');
     onAuthStateChanged(auth, function(user) {
