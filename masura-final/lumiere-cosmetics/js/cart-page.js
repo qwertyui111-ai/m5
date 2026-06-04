@@ -35,6 +35,11 @@ function renderCart() {
   bindCartEvents();
 }
 
+// ---- Helpers ----
+function formatPrice(n) {
+  return Number(n || 0).toLocaleString('ru-RU') + ' ₽';
+}
+
 // ---- Cart item HTML ----
 function renderCartItem(item) {
   const p = item.product || item;
