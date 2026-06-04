@@ -49,6 +49,7 @@ onAuthStateChanged(auth, async user => {
     }
     document.getElementById('login-screen').style.display  = 'none';
     document.getElementById('admin-app').style.display     = 'grid';
+    setTimeout(() => loadDashboard(30), 500);
     document.getElementById('admin-email-display').textContent = user.email;
     // Показываем мобильный хедер
     const mobileHeader = document.getElementById('mobile-header');
@@ -234,6 +235,8 @@ document.getElementById('add-product-btn').addEventListener('click', () => {
   document.getElementById('pm-active').checked    = true;
   document.getElementById('pm-favorite').checked   = false;
   document.getElementById('pm-sku').value          = '';
+  document.getElementById('pm-stock').value        = '';
+  document.getElementById('pm-stock-min').value    = 5;
   renderGalleryList([]);
   document.getElementById('pm-color').value        = '';
   document.getElementById('pm-effect').value       = '';
@@ -256,7 +259,9 @@ window.openEditProduct = async (id) => {
   document.getElementById('pm-badge').value       = p.badge || '';
   document.getElementById('pm-active').checked    = p.active !== false;
   document.getElementById('pm-favorite').checked   = p.favorite === true;
-  document.getElementById('pm-sku').value          = p.sku    || '';
+  document.getElementById('pm-sku').value          = p.sku      || '';
+  document.getElementById('pm-stock').value        = p.stock    ?? '';
+  document.getElementById('pm-stock-min').value    = p.stockMin  ?? 5;
   renderGalleryList(p.gallery || []);
   document.getElementById('pm-color').value        = p.color  || '';
   document.getElementById('pm-effect').value       = p.effect || '';
@@ -291,6 +296,8 @@ document.getElementById('save-product-btn').addEventListener('click', async () =
     active:      document.getElementById('pm-active').checked,
     favorite:    document.getElementById('pm-favorite').checked,
     sku:         document.getElementById('pm-sku').value.trim(),
+    stock:       parseInt(document.getElementById('pm-stock').value) || 0,
+    stockMin:    parseInt(document.getElementById('pm-stock-min').value) || 5,
     gallery:     getGalleryUrls(),
     color:       document.getElementById('pm-color').value.trim(),
     effect:      document.getElementById('pm-effect').value.trim(),
@@ -827,5 +834,195 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch(e) {
       showToast('Ошибка: ' + e.message);
     }
+  });
+});
+
+// ============================================================
+// DASHBOARD ANALYTICS
+// ============================================================
+
+async function loadDashboard(days = 30) {
+  try {
+    const { collection, getDocs } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
+    const _db = window._db;
+    if (!_db) return;
+    const since = new Date(); since.setDate(since.getDate() - days);
+    const [ordersSnap, productsSnap, usersSnap] = await Promise.all([
+      getDocs(collection(_db, 'orders')),
+      getDocs(collection(_db, 'products')),
+      getDocs(collection(_db, 'users'))
+    ]);
+    const allProducts = productsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+    const allOrders   = ordersSnap.docs.map(d => d.data());
+    const recent      = allOrders.filter(o => (o.createdAt?.toDate?.() || new Date(0)) >= since);
+    const revenue     = recent.reduce((s,o) => s + (o.total||0), 0);
+    const customers   = new Set(recent.map(o => o.userId||o.customerEmail).filter(Boolean)).size;
+    const avg         = recent.length ? Math.round(revenue/recent.length) : 0;
+    const lowStock    = allProducts.filter(p => p.stock !== undefined && p.stock <= (p.stockMin||5)).length;
+
+    const el = id => document.getElementById(id);
+    if(el('stat-products'))  el('stat-products').textContent  = allProducts.filter(p=>p.active).length;
+    if(el('stat-orders'))    el('stat-orders').textContent    = recent.length;
+    if(el('stat-revenue'))   el('stat-revenue').textContent   = revenue.toLocaleString('ru-RU') + ' ₽';
+    if(el('stat-customers')) el('stat-customers').textContent = customers;
+    if(el('stat-avg'))       el('stat-avg').textContent       = avg.toLocaleString('ru-RU') + ' ₽';
+    if(el('stat-low-stock')) el('stat-low-stock').textContent = lowStock || '—';
+  } catch(e) { console.warn('Dashboard error:', e); }
+}
+
+async function loadSales(days = 30) {
+  // Highlight active period button
+  [7, 30, 90].forEach(d => {
+    const btn = document.getElementById('period-' + d);
+    if (btn) btn.style.background = d === days ? '#111' : '';
+    if (btn) btn.style.color = d === days ? '#fff' : '';
+  });
+
+  try {
+    const { collection, getDocs, query, where, orderBy, Timestamp } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
+    const _db = window._db;
+    if (!_db) return;
+
+    const since = new Date();
+    since.setDate(since.getDate() - days);
+
+    // Load orders
+    const ordersSnap = await getDocs(collection(_db, 'orders'));
+    const allOrders = ordersSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+    const recentOrders = allOrders.filter(o => {
+      const ts = o.createdAt?.toDate?.() || new Date(0);
+      return ts >= since;
+    });
+
+    // Load products for stock
+    const productsSnap = await getDocs(collection(_db, 'products'));
+    const allProducts = productsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+    // KPIs
+    const revenue = recentOrders.reduce((s, o) => s + (o.total || 0), 0);
+    const uniqueCustomers = new Set(recentOrders.map(o => o.userId || o.customerEmail).filter(Boolean)).size;
+    const avgCheck = recentOrders.length ? Math.round(revenue / recentOrders.length) : 0;
+    const lowStock = allProducts.filter(p => p.stock !== undefined && p.stock <= (p.stockMin || 5)).length;
+
+    const el = id => document.getElementById(id);
+    el('stat-products').textContent = allProducts.filter(p => p.active).length;
+    el('stat-orders').textContent   = recentOrders.length;
+    el('stat-revenue').textContent  = revenue.toLocaleString('ru-RU') + ' ₽';
+    el('stat-customers').textContent = uniqueCustomers;
+    el('stat-avg').textContent      = avgCheck.toLocaleString('ru-RU') + ' ₽';
+    el('stat-low-stock').textContent = lowStock || '—';
+    const pl = document.getElementById('sales-period-label'); if(pl) pl.textContent = `за ${days} дней`;
+
+    // Revenue by day chart
+    const dayMap = {};
+    for (let i = days - 1; i >= 0; i--) {
+      const d = new Date(); d.setDate(d.getDate() - i);
+      dayMap[d.toLocaleDateString('ru-RU', { day:'2-digit', month:'2-digit' })] = 0;
+    }
+    recentOrders.forEach(o => {
+      const d = o.createdAt?.toDate?.();
+      if (d) {
+        const key = d.toLocaleDateString('ru-RU', { day:'2-digit', month:'2-digit' });
+        if (key in dayMap) dayMap[key] += o.total || 0;
+      }
+    });
+    drawRevenueChart(Object.keys(dayMap), Object.values(dayMap));
+
+    // Top products
+    const productSales = {};
+    recentOrders.forEach(o => {
+      (o.items || []).forEach(item => {
+        const id = item.id || item.productId;
+        if (!id) return;
+        productSales[id] = (productSales[id] || 0) + (item.qty || 1);
+      });
+    });
+
+    const topList = document.getElementById('top-products-list');
+    const sorted = Object.entries(productSales).sort((a,b) => b[1]-a[1]).slice(0, 10);
+    if (sorted.length === 0) {
+      topList.innerHTML = '<p style="color:#aaa;font-size:13px;padding:16px 0">Нет данных о продажах</p>';
+    } else {
+      const maxQty = sorted[0][1];
+      topList.innerHTML = sorted.map(([id, qty]) => {
+        const p = allProducts.find(x => x.id === id);
+        const name = p?.name || id;
+        const pct = Math.round(qty / maxQty * 100);
+        return `<div style="margin-bottom:12px">
+          <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px">
+            <span style="color:#111;font-weight:500">${name.slice(0,50)}${name.length>50?'…':''}</span>
+            <span style="color:#666">${qty} шт.</span>
+          </div>
+          <div style="background:#f5f5f5;height:6px;border-radius:3px">
+            <div style="background:#111;height:6px;border-radius:3px;width:${pct}%"></div>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+  } catch(e) {
+    console.error('Dashboard error:', e);
+  }
+}
+
+function drawRevenueChart(labels, data) {
+  const canvas = document.getElementById('revenue-chart');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.offsetWidth || 600;
+  const H = 160;
+  canvas.width = W;
+  canvas.height = H;
+
+  const max = Math.max(...data, 1);
+  const pad = { top: 20, right: 10, bottom: 30, left: 60 };
+  const chartW = W - pad.left - pad.right;
+  const chartH = H - pad.top - pad.bottom;
+  const barW = Math.max(2, chartW / data.length - 4);
+
+  ctx.clearRect(0, 0, W, H);
+
+  // Grid lines
+  ctx.strokeStyle = '#f0f0f0';
+  ctx.lineWidth = 1;
+  for (let i = 0; i <= 4; i++) {
+    const y = pad.top + chartH - (chartH / 4 * i);
+    ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(W - pad.right, y); ctx.stroke();
+    ctx.fillStyle = '#aaa';
+    ctx.font = '10px DM Sans, sans-serif';
+    ctx.textAlign = 'right';
+    ctx.fillText(Math.round(max / 4 * i).toLocaleString('ru-RU'), pad.left - 6, y + 3);
+  }
+
+  // Bars
+  data.forEach((val, i) => {
+    const x = pad.left + i * (chartW / data.length) + (chartW / data.length - barW) / 2;
+    const h = val / max * chartH;
+    const y = pad.top + chartH - h;
+    ctx.fillStyle = val > 0 ? '#111' : '#eee';
+    ctx.fillRect(x, y, barW, h);
+  });
+
+  // Labels (every Nth)
+  const step = Math.ceil(labels.length / 10);
+  ctx.fillStyle = '#aaa';
+  ctx.font = '9px DM Sans, sans-serif';
+  ctx.textAlign = 'center';
+  labels.forEach((lbl, i) => {
+    if (i % step === 0) {
+      const x = pad.left + i * (chartW / data.length) + chartW / data.length / 2;
+      ctx.fillText(lbl, x, H - 6);
+    }
+  });
+}
+
+// Auto-load dashboard when section opens
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.sidebar__item[data-section]').forEach(item => {
+    item.addEventListener('click', () => {
+      if (item.dataset.section === 'dashboard') loadDashboard(30);
+      if (item.dataset.section === 'sales') loadSales(30);
+      if (item.dataset.section === 'orders') loadOrders();
+    });
   });
 });
