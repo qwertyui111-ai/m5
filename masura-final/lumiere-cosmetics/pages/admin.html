@@ -41,6 +41,10 @@
         <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
         Дашборд
       </div>
+      <div class="sidebar__item" data-section="sales">
+        <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        Продажи
+      </div>
       <div class="sidebar__item" data-section="products">
         <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
         Товары
@@ -84,15 +88,40 @@
       <p class="admin-page-sub">Добро пожаловать в панель управления Masura</p>
       <div class="stats-grid">
         <div class="stat-card"><p class="stat-card__label">Товаров</p><p class="stat-card__value" id="stat-products">—</p></div>
-        <div class="stat-card"><p class="stat-card__label">Категорий</p><p class="stat-card__value" id="stat-categories">—</p></div>
         <div class="stat-card"><p class="stat-card__label">Заказов</p><p class="stat-card__value" id="stat-orders">—</p></div>
-        <div class="stat-card"><p class="stat-card__label">Новых заказов</p><p class="stat-card__value accent" id="stat-new-orders">—</p></div>
+        <div class="stat-card"><p class="stat-card__label">Выручка</p><p class="stat-card__value" id="stat-revenue">—</p></div>
+        <div class="stat-card"><p class="stat-card__label">Покупателей</p><p class="stat-card__value" id="stat-customers">—</p></div>
+        <div class="stat-card"><p class="stat-card__label">Средний чек</p><p class="stat-card__value" id="stat-avg">—</p></div>
+        <div class="stat-card"><p class="stat-card__label">Товаров мало</p><p class="stat-card__value" id="stat-low-stock" style="color:#e05c5c">—</p></div>
       </div>
-      <div class="data-table-wrap">
-        <table class="data-table">
-          <thead><tr><th>Заказ</th><th>Покупатель</th><th>Сумма</th><th>Статус</th><th>Дата</th></tr></thead>
-          <tbody id="recent-orders-body"><tr><td colspan="5"><div class="loading"><div class="spinner"></div> Загрузка...</div></td></tr></tbody>
-        </table>
+    </section>
+
+    <!-- SALES -->
+    <section class="admin-section" id="section-sales">
+      <h1 class="admin-page-title">Продажи</h1>
+      <p class="admin-page-sub">Аналитика и статистика заказов</p>
+
+      <div style="display:flex;gap:8px;margin-bottom:24px">
+        <button class="btn btn-outline btn-sm" onclick="loadSales(7)" id="period-7">7 дней</button>
+        <button class="btn btn-outline btn-sm" onclick="loadSales(30)" id="period-30">30 дней</button>
+        <button class="btn btn-outline btn-sm" onclick="loadSales(90)" id="period-90">90 дней</button>
+      </div>
+
+      <div class="stats-grid" id="sales-kpi">
+        <div class="stat-card"><p class="stat-card__label">Заказов</p><p class="stat-card__value" id="sales-orders">—</p></div>
+        <div class="stat-card"><p class="stat-card__label">Выручка</p><p class="stat-card__value" id="sales-revenue">—</p></div>
+        <div class="stat-card"><p class="stat-card__label">Покупателей</p><p class="stat-card__value" id="sales-customers">—</p></div>
+        <div class="stat-card"><p class="stat-card__label">Средний чек</p><p class="stat-card__value" id="sales-avg">—</p></div>
+      </div>
+
+      <div class="settings-card" style="margin-top:24px">
+        <h2 class="settings-card__title">Выручка по дням <span style="font-size:12px;font-weight:400;color:#aaa" id="sales-period-label"></span></h2>
+        <canvas id="revenue-chart" height="80"></canvas>
+      </div>
+
+      <div class="settings-card" style="margin-top:24px">
+        <h2 class="settings-card__title">Топ товаров по продажам</h2>
+        <div id="top-products-list"></div>
       </div>
     </section>
 
@@ -333,6 +362,10 @@
         </div>
       </div>
       <div class="form-group"><label>Артикул</label><input type="text" id="pm-sku" placeholder="ML108"></div>
+      <div class="form-row">
+        <div class="form-group"><label>Остаток на складе <span style="font-size:10px;color:#aaa">(шт.)</span></label><input type="number" id="pm-stock" placeholder="0" min="0"></div>
+        <div class="form-group"><label>Мин. остаток для предупреждения</label><input type="number" id="pm-stock-min" placeholder="5" min="0"></div>
+      </div>
       <div class="form-group">
         <label>Дополнительные фото (после основного)</label>
         <div id="pm-gallery-list" style="display:flex;flex-direction:column;gap:8px;margin-bottom:8px"></div>
