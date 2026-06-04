@@ -30,7 +30,7 @@ export function initOzonImport() {
   section.id = 'section-import';
   section.innerHTML = `
     <h1 class="admin-page-title">Импорт из Ozon</h1>
-    <p class="admin-page-sub">Загрузи товары прямо из своего магазина на Ozon Seller</p>
+    <p class="admin-page-sub">Загрузка товаров с магазинов Ozon</p>
 
     <div class="settings-card">
       <h2 class="settings-card__title">API ключи Ozon</h2>
