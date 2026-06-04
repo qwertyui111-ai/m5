@@ -450,10 +450,8 @@ async function loadSettings() {
   document.getElementById('s-banner1').value          = s.heroBanner1   || '';
   document.getElementById('s-banner2-enabled').checked = s.heroBanner2Enabled !== false;
   document.getElementById('s-banner2').value          = s.heroBanner2   || '';
-  document.getElementById('s-footer-about').value     = s.footerAbout   || '';
-  document.getElementById('s-footer-help').value      = s.footerHelp    || '';
-  document.getElementById('s-footer-info').value      = s.footerInfo    || '';
-  document.getElementById('s-footer-contacts').value  = s.footerContacts|| '';
+  document.getElementById('s-footer-about').value     = s.footerAbout    || '';
+  document.getElementById('s-footer-contacts').value  = s.footerContacts || '';
 }
 
 document.getElementById('save-settings-btn').addEventListener('click', async () => {
