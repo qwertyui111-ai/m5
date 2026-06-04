@@ -183,9 +183,53 @@ async function applyPromo() {
 }
 
 // ---- Checkout (placeholder) ----
-function handleCheckout() {
+async function handleCheckout() {
   if (Cart.getCount() === 0) return;
-  showToast('Функция оформления заказа в разработке');
+  try {
+    const base = window.location.pathname.includes('/pages/') ? '../js/' : './js/';
+    const { auth, db } = await import(base + 'firebase-config.js').catch(() => ({}));
+    if (!db) { showToast('Ошибка подключения'); return; }
+
+    const { collection, addDoc, doc, getDoc, updateDoc, increment, serverTimestamp } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
+
+    const items = Cart.getItems();
+    const user  = auth?.currentUser;
+    const total = appliedDiscount > 0
+      ? Math.round(Cart.getSubtotal() * (1 - appliedDiscount / 100)) + Cart.getDelivery()
+      : Cart.getTotal();
+
+    // Save order to Firebase
+    await addDoc(collection(db, 'orders'), {
+      userId:        user?.uid || null,
+      customerEmail: user?.email || null,
+      items:         items.map(i => ({ id: i.id, name: i.name, price: i.price, qty: i.qty })),
+      total,
+      discount:      appliedDiscount,
+      status:        'new',
+      createdAt:     serverTimestamp()
+    });
+
+    // Decrease stock for each item
+    for (const item of items) {
+      try {
+        const productRef = doc(db, 'products', item.id);
+        const snap = await getDoc(productRef);
+        if (snap.exists() && snap.data().stock !== undefined) {
+          await updateDoc(productRef, { stock: Math.max(0, snap.data().stock - item.qty) });
+        }
+      } catch(e) { console.warn('Stock update error:', e); }
+    }
+
+    // Clear cart
+    Cart.clear();
+    appliedDiscount = 0;
+    showToast('Заказ оформлен! Мы свяжемся с вами.');
+    renderCart();
+
+  } catch(e) {
+    console.error('Checkout error:', e);
+    showToast('Ошибка при оформлении заказа');
+  }
 }
 
 // ---- Helper ----
