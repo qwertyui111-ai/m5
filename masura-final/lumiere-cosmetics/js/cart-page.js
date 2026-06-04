@@ -35,6 +35,9 @@ function renderCart() {
   bindCartEvents();
 }
 
+// ---- Promo/discount state ----
+let appliedDiscount = 0;
+
 // ---- Helpers ----
 function formatPrice(n) {
   return Number(n || 0).toLocaleString('ru-RU') + ' ₽';
@@ -72,7 +75,8 @@ function renderCartItem(item) {
 
 // ---- Order summary HTML ----
 function renderOrderSummary() {
-  const sub      = Cart.getSubtotal();
+  const rawSub   = Cart.getSubtotal();
+  const sub      = appliedDiscount > 0 ? Math.round(rawSub * (1 - appliedDiscount / 100)) : rawSub;
   const delivery = Cart.getDelivery();
   const total    = Cart.getTotal();
   const count    = Cart.getCount();
@@ -89,6 +93,10 @@ function renderOrderSummary() {
         <span>Доставка</span>
         <span>${delivery === 0 ? '<span style="color:var(--color-accent)">Бесплатно</span>' : formatPrice(delivery)}</span>
       </div>
+      ${appliedDiscount > 0 ? `<div class="summary-row" style="color:green">
+        <span>Скидка ${appliedDiscount}%</span>
+        <span>−${formatPrice(rawSub - sub)}</span>
+      </div>` : ''}
       ${delivery > 0 ? `
         <p style="font-size:12px; color:var(--color-text-muted); margin:4px 0 0;">
           Бесплатно от 5 000 ₽
@@ -153,12 +161,25 @@ function bindCartEvents() {
 }
 
 // ---- Promo code (placeholder) ----
-function applyPromo() {
+async function applyPromo() {
   const input = document.getElementById('promo-code');
   const code  = input?.value.trim().toUpperCase();
   if (!code) return;
-  // TODO: integrate with backend
-  showToast(`Промокод «${code}» не найден`);
+  try {
+    const { db } = await import('./firebase-config.js').catch(() => ({}));
+    if (!db) { showToast('Ошибка подключения'); return; }
+    const { doc, getDoc } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
+    const snap = await getDoc(doc(db, 'promocodes', code));
+    if (!snap.exists() || !snap.data().active) {
+      showToast('Промокод не найден или недействителен');
+      return;
+    }
+    appliedDiscount = snap.data().discount;
+    showToast(`Промокод применён — скидка ${appliedDiscount}%`);
+    renderCart();
+  } catch(e) {
+    showToast('Ошибка при проверке промокода');
+  }
 }
 
 // ---- Checkout (placeholder) ----
