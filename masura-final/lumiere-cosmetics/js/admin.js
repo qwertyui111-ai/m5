@@ -49,7 +49,7 @@ onAuthStateChanged(auth, async user => {
     }
     document.getElementById('login-screen').style.display  = 'none';
     document.getElementById('admin-app').style.display     = 'grid';
-    setTimeout(() => loadDashboard(30), 500);
+    setTimeout(() => { loadDashboard(30); loadDashboardLegacy(); }, 500);
     document.getElementById('admin-email-display').textContent = user.email;
     // Показываем мобильный хедер
     const mobileHeader = document.getElementById('mobile-header');
@@ -122,33 +122,31 @@ async function initAdmin() {
 // DASHBOARD
 // ============================================================
 
-async function loadDashboard() {
-  const [products, categories, orders] = await Promise.all([
-    getProducts(), getCategories(), getOrders()
-  ]);
-
-  document.getElementById('stat-products').textContent   = products.length;
-  document.getElementById('stat-categories').textContent = categories.length;
-  document.getElementById('stat-orders').textContent     = orders.length;
-  document.getElementById('stat-new-orders').textContent = orders.filter(o => o.status === 'new').length;
-
-  const tbody = document.getElementById('recent-orders-body');
-  const recent = orders.slice(0, 5);
-
-  if (recent.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state"><div class="empty-state__icon">📭</div><p class="empty-state__text">Заказов пока нет</p></div></td></tr>`;
-    return;
-  }
-
-  tbody.innerHTML = recent.map(o => `
-    <tr>
-      <td>#${o.id.slice(-6).toUpperCase()}</td>
-      <td>${o.customerName || '—'}</td>
-      <td>${formatPrice(o.total || 0)}</td>
-      <td>${statusBadge(o.status)}</td>
-      <td>${formatDate(o.createdAt)}</td>
-    </tr>
-  `).join('');
+async function loadDashboardLegacy() {
+  try {
+    const [products, categories, orders] = await Promise.all([
+      getProducts(), getCategories(), getOrders()
+    ]);
+    const el = id => document.getElementById(id);
+    if(el('stat-categories')) el('stat-categories').textContent = categories.length;
+    if(el('stat-new-orders')) el('stat-new-orders').textContent = orders.filter(o => o.status === 'new').length;
+    const tbody = document.getElementById('recent-orders-body');
+    if (!tbody) return;
+    const recent = orders.slice(0, 5);
+    if (recent.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state"><div class="empty-state__icon">📭</div><p class="empty-state__text">Заказов пока нет</p></div></td></tr>`;
+      return;
+    }
+    tbody.innerHTML = recent.map(o => `
+      <tr>
+        <td>#${o.id.slice(-6).toUpperCase()}</td>
+        <td>${o.customerName || '—'}</td>
+        <td>${formatPrice(o.total || 0)}</td>
+        <td>${statusBadge(o.status)}</td>
+        <td>${formatDate(o.createdAt)}</td>
+      </tr>
+    `).join('');
+  } catch(e) { console.warn('Dashboard legacy error:', e); }
 }
 
 // ============================================================
