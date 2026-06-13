@@ -477,8 +477,6 @@ document.getElementById('save-settings-btn').addEventListener('click', async () 
     heroBanner2Enabled: document.getElementById('s-banner2-enabled').checked,
     heroBanner2:  document.getElementById('s-banner2').value.trim(),
     footerAbout:  document.getElementById('s-footer-about').value.trim(),
-    footerHelp:   document.getElementById('s-footer-help').value.trim(),
-    footerInfo:   document.getElementById('s-footer-info').value.trim(),
     footerContacts: document.getElementById('s-footer-contacts').value.trim(),
   });
   toast('Настройки сохранены ✓');
