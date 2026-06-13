@@ -875,18 +875,34 @@ Instagram: @masura</p>
       }
 
       // Theme
-      if (settings?.themeBg)     document.body.style.background = settings.themeBg;
-      if (settings?.themeText)   document.body.style.color = settings.themeText;
-      if (settings?.themeAccent) {
-        document.querySelectorAll('.cookie-accept-btn, .auth-btn, .product-modal__btn, .checkout-btn').forEach(el => el.style.background = settings.themeAccent);
-      }
-      if (settings?.fontDisplay || settings?.fontBody) {
-        const style = document.createElement('style');
-        style.textContent = `
-          ${settings.fontDisplay ? `h1,h2,h3,.product-modal__name,.site-footer__logo,.auth-logo,.site-nav__logo { font-family: '${settings.fontDisplay}', serif !important; }` : ''}
-          ${settings.fontBody ? `body, button, input, select, textarea { font-family: '${settings.fontBody}', sans-serif !important; }` : ''}
+      if (settings?.themeBg || settings?.themeText || settings?.themeAccent || settings?.fontDisplay || settings?.fontBody) {
+        const themeStyle = document.createElement('style');
+        themeStyle.id = 'masura-theme';
+        const bg      = settings.themeBg     || '#ffffff';
+        const text    = settings.themeText   || '#111111';
+        const accent  = settings.themeAccent || '#111111';
+        const fdisplay = settings.fontDisplay ? `'${settings.fontDisplay}', serif` : null;
+        const fbody    = settings.fontBody    ? `'${settings.fontBody}', sans-serif` : null;
+
+        themeStyle.textContent = `
+          body, html { background: ${bg} !important; }
+          body, p, span, div, li, a, label, td, th, input, textarea, select {
+            color: ${text} !important;
+            ${fbody ? `font-family: ${fbody} !important;` : ''}
+          }
+          h1, h2, h3, h4, .site-nav__logo, .site-footer__logo, .product-modal__name,
+          .catalog-header__title, .cart-title, .profile-name, .legal-title {
+            color: ${text} !important;
+            ${fdisplay ? `font-family: ${fdisplay} !important;` : ''}
+          }
+          .site-nav__cart-count, .cookie-accept-btn, .product-card__quick-add,
+          .product-modal__btn, .checkout-btn, .auth-btn, .promo-btn, .btn-primary {
+            background: ${accent} !important;
+          }
+          .site-nav { background: ${bg} !important; border-bottom-color: ${text}22 !important; }
+          .product-card__category, .site-nav__link, .filter-btn { color: ${text}88 !important; }
         `;
-        document.head.appendChild(style);
+        document.head.appendChild(themeStyle);
       }
 
       // Logo image
