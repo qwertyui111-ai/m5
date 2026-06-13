@@ -455,6 +455,11 @@ async function loadSettings() {
   document.getElementById('s-banner1').value          = s.heroBanner1   || '';
   document.getElementById('s-banner2-enabled').checked = s.heroBanner2Enabled !== false;
   document.getElementById('s-banner2').value          = s.heroBanner2   || '';
+  document.getElementById('s-bg-color').value        = s.themeBg      || '#ffffff';
+  document.getElementById('s-text-color').value      = s.themeText    || '#111111';
+  document.getElementById('s-accent-color').value    = s.themeAccent  || '#111111';
+  document.getElementById('s-font-display').value    = s.fontDisplay  || 'Cormorant Garamond';
+  document.getElementById('s-font-body').value       = s.fontBody     || 'DM Sans';
   document.getElementById('s-footer-about').value     = s.footerAbout    || '';
   document.getElementById('s-footer-contacts').value  = s.footerContacts || '';
 }
