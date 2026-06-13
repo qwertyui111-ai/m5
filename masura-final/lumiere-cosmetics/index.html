@@ -875,11 +875,19 @@ Instagram: @masura</p>
       }
 
       // Theme
-      if (settings?.themeBg)     document.documentElement.style.setProperty('--color-bg',      settings.themeBg);
-      if (settings?.themeText)   document.documentElement.style.setProperty('--color-text',    settings.themeText);
-      if (settings?.themeAccent) document.documentElement.style.setProperty('--color-accent',  settings.themeAccent);
-      if (settings?.fontDisplay) document.documentElement.style.setProperty('--font-display', `'${settings.fontDisplay}', serif`);
-      if (settings?.fontBody)    document.documentElement.style.setProperty('--font-body',    `'${settings.fontBody}', sans-serif`);
+      if (settings?.themeBg)     document.body.style.background = settings.themeBg;
+      if (settings?.themeText)   document.body.style.color = settings.themeText;
+      if (settings?.themeAccent) {
+        document.querySelectorAll('.cookie-accept-btn, .auth-btn, .product-modal__btn, .checkout-btn').forEach(el => el.style.background = settings.themeAccent);
+      }
+      if (settings?.fontDisplay || settings?.fontBody) {
+        const style = document.createElement('style');
+        style.textContent = `
+          ${settings.fontDisplay ? `h1,h2,h3,.product-modal__name,.site-footer__logo,.auth-logo,.site-nav__logo { font-family: '${settings.fontDisplay}', serif !important; }` : ''}
+          ${settings.fontBody ? `body, button, input, select, textarea { font-family: '${settings.fontBody}', sans-serif !important; }` : ''}
+        `;
+        document.head.appendChild(style);
+      }
 
       // Logo image
       if (settings?.logoImage) {
