@@ -77,6 +77,21 @@ function switchTab(tab) {
 }
 </script>
 
+
+<script>
+function isValidRussianEmail(email) {
+  const allowed = [
+    'mail.ru','inbox.ru','list.ru','bk.ru',
+    'yandex.ru','ya.ru','yandex.com',
+    'rambler.ru','autorambler.ru',
+    'icloud.com','me.com',
+    'outlook.com','hotmail.com'
+  ];
+  const domain = email.split('@')[1]?.toLowerCase();
+  return allowed.includes(domain);
+}
+</script>
+
 <script type="module">
 import { auth, db } from '../js/firebase-config.js';
 import {
@@ -126,6 +141,10 @@ document.getElementById('btn-login').addEventListener('click', async function() 
   const err   = document.getElementById('login-error');
   err.textContent = '';
   if (!email || !pass) { err.textContent = 'Введите email и пароль'; return; }
+  if (!isValidRussianEmail(email)) {
+    err.textContent = 'Пожалуйста, используйте российский почтовый сервис (mail.ru, yandex.ru и др.)';
+    return;
+  }
   try {
     const cred = await signInWithEmailAndPassword(auth, email, pass);
     if (!cred.user.emailVerified) {
@@ -148,6 +167,10 @@ document.getElementById('btn-register').addEventListener('click', async function
   const err   = document.getElementById('reg-error');
   err.textContent = '';
   if (!email || !pass) { err.textContent = 'Введите email и пароль'; return; }
+  if (!isValidRussianEmail(email)) {
+    err.textContent = 'Пожалуйста, используйте российский почтовый сервис (mail.ru, yandex.ru и др.)';
+    return;
+  }
   if (!document.getElementById('reg-consent').checked) {
     err.textContent = 'Необходимо согласиться с политикой конфиденциальности';
     return;
