@@ -1059,3 +1059,67 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 });
+
+// ============================================================
+// SIDEBAR DRAG-AND-DROP
+// ============================================================
+
+function initSidebarDrag() {
+  const sidebar = document.querySelector('.sidebar__nav');
+  if (!sidebar) return;
+
+  const items = [...sidebar.querySelectorAll('.sidebar__item')];
+
+  // Restore saved order
+  const saved = localStorage.getItem('masura_sidebar_order');
+  if (saved) {
+    try {
+      const order = JSON.parse(saved);
+      order.forEach(section => {
+        const el = sidebar.querySelector(`[data-section="${section}"]`);
+        if (el) sidebar.appendChild(el);
+      });
+    } catch(e) {}
+  }
+
+  // Add drag handles and events
+  sidebar.querySelectorAll('.sidebar__item').forEach(item => {
+    item.draggable = true;
+    item.style.cursor = 'grab';
+
+    item.addEventListener('dragstart', e => {
+      e.dataTransfer.effectAllowed = 'move';
+      item.classList.add('dragging');
+      setTimeout(() => item.style.opacity = '0.4', 0);
+    });
+
+    item.addEventListener('dragend', () => {
+      item.classList.remove('dragging');
+      item.style.opacity = '';
+      sidebar.querySelectorAll('.sidebar__item').forEach(i => i.classList.remove('drag-over'));
+      // Save new order
+      const order = [...sidebar.querySelectorAll('.sidebar__item')].map(i => i.dataset.section);
+      localStorage.setItem('masura_sidebar_order', JSON.stringify(order));
+    });
+
+    item.addEventListener('dragover', e => {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      const dragging = sidebar.querySelector('.dragging');
+      if (!dragging || dragging === item) return;
+      sidebar.querySelectorAll('.sidebar__item').forEach(i => i.classList.remove('drag-over'));
+      item.classList.add('drag-over');
+      const rect = item.getBoundingClientRect();
+      const mid = rect.top + rect.height / 2;
+      if (e.clientY < mid) {
+        sidebar.insertBefore(dragging, item);
+      } else {
+        sidebar.insertBefore(dragging, item.nextSibling);
+      }
+    });
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(initSidebarDrag, 300);
+});
