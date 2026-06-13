@@ -476,6 +476,11 @@ document.getElementById('save-settings-btn').addEventListener('click', async () 
     heroBanner1:  document.getElementById('s-banner1').value.trim(),
     heroBanner2Enabled: document.getElementById('s-banner2-enabled').checked,
     heroBanner2:  document.getElementById('s-banner2').value.trim(),
+     themeBg:      document.getElementById('s-bg-color').value,
+     themeText:    document.getElementById('s-text-color').value,
+     themeAccent:  document.getElementById('s-accent-color').value,
+     fontDisplay:  document.getElementById('s-font-display').value,
+     fontBody:     document.getElementById('s-font-body').value,
     footerAbout:  document.getElementById('s-footer-about').value.trim(),
     footerContacts: document.getElementById('s-footer-contacts').value.trim(),
   });
