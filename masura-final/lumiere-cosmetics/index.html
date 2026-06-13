@@ -874,6 +874,13 @@ Instagram: @masura</p>
         }
       }
 
+      // Theme
+      if (settings?.themeBg)     document.documentElement.style.setProperty('--color-bg',      settings.themeBg);
+      if (settings?.themeText)   document.documentElement.style.setProperty('--color-text',    settings.themeText);
+      if (settings?.themeAccent) document.documentElement.style.setProperty('--color-accent',  settings.themeAccent);
+      if (settings?.fontDisplay) document.documentElement.style.setProperty('--font-display', `'${settings.fontDisplay}', serif`);
+      if (settings?.fontBody)    document.documentElement.style.setProperty('--font-body',    `'${settings.fontBody}', sans-serif`);
+
       // Logo image
       if (settings?.logoImage) {
         const logoEl = document.querySelector('.site-nav__logo');
