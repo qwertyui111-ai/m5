@@ -1024,3 +1024,38 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 });
+
+// ============================================================
+// NOTES
+// ============================================================
+
+async function loadNotes() {
+  const el = document.getElementById('notes-text');
+  if (!el) return;
+  try {
+    const { doc, getDoc } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
+    const snap = await getDoc(doc(window._db, 'settings', 'admin_notes'));
+    if (snap.exists()) el.value = snap.data().text || '';
+  } catch(e) { console.warn('Notes load error:', e); }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('save-notes-btn')?.addEventListener('click', async () => {
+    const text = document.getElementById('notes-text')?.value || '';
+    const status = document.getElementById('notes-status');
+    try {
+      const { doc, setDoc } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
+      await setDoc(doc(window._db, 'settings', 'admin_notes'), { text, updatedAt: new Date().toISOString() });
+      if (status) { status.textContent = '✓ Сохранено'; setTimeout(() => { status.textContent = ''; }, 2000); }
+    } catch(e) {
+      if (status) status.textContent = 'Ошибка сохранения';
+    }
+  });
+
+  document.getElementById('notes-text')?.addEventListener('keydown', function(e) {
+    if (e.ctrlKey && e.key === 's') {
+      e.preventDefault();
+      document.getElementById('save-notes-btn')?.click();
+    }
+  });
+});
