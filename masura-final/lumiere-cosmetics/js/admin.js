@@ -455,9 +455,11 @@ async function loadSettings() {
   document.getElementById('s-banner1').value          = s.heroBanner1   || '';
   document.getElementById('s-banner2-enabled').checked = s.heroBanner2Enabled !== false;
   document.getElementById('s-banner2').value          = s.heroBanner2   || '';
-  document.getElementById('s-bg-color').value        = s.themeBg      || '#ffffff';
+  document.getElementById('s-bg-color').value        = s.themeBg       || '#ffffff';
+  document.getElementById('s-heading-color').value    = s.themeHeading  || '#111111';
   document.getElementById('s-text-color').value      = s.themeText    || '#111111';
-  document.getElementById('s-accent-color').value    = s.themeAccent  || '#111111';
+  document.getElementById('s-accent-color').value    = s.themeAccent    || '#111111';
+  document.getElementById('s-btn-text-color').value   = s.themeBtnText   || '#ffffff';
   document.getElementById('s-font-display').value    = s.fontDisplay  || 'Cormorant Garamond';
   document.getElementById('s-font-body').value       = s.fontBody     || 'DM Sans';
   document.getElementById('s-footer-about').value     = s.footerAbout    || '';
@@ -477,8 +479,10 @@ document.getElementById('save-settings-btn').addEventListener('click', async () 
     heroBanner2Enabled: document.getElementById('s-banner2-enabled').checked,
     heroBanner2:  document.getElementById('s-banner2').value.trim(),
      themeBg:      document.getElementById('s-bg-color').value,
+     themeHeading: document.getElementById('s-heading-color').value,
      themeText:    document.getElementById('s-text-color').value,
      themeAccent:  document.getElementById('s-accent-color').value,
+     themeBtnText: document.getElementById('s-btn-text-color').value,
      fontDisplay:  document.getElementById('s-font-display').value,
      fontBody:     document.getElementById('s-font-body').value,
     footerAbout:  document.getElementById('s-footer-about').value.trim(),
